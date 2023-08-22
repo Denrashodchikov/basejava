@@ -2,7 +2,7 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private int size = 0;
+    private int size;
     Resume[] storage = new Resume[10000];
 
     void clear() {
@@ -13,7 +13,7 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        if(get(r.uuid)==null) {
+        if (get(r.uuid) == null) {
             storage[size] = r;
             size++;
         }
@@ -35,6 +35,7 @@ public class ArrayStorage {
                     storage[j] = storage[j + 1];
                 }
                 size--;
+                storage[size] = null;
             }
         }
     }
@@ -43,9 +44,9 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] rs = new Resume[size];
-        System.arraycopy( storage, 0, rs, 0, size );
-        return rs;
+        Resume[] resumes = new Resume[size];
+        System.arraycopy(storage, 0, resumes, 0, size);
+        return resumes;
     }
 
     int size() {
