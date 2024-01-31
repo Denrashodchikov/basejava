@@ -37,7 +37,6 @@ public class MainTestArrayStorage {
         Resume rUpd = new Resume();
         rUpd.setUuid("uuuuuu");
         ARRAY_STORAGE.update(rUpd);
-        ARRAY_STORAGE.update(null);
 
         System.out.println("Get r2: " + ARRAY_STORAGE.get(r2.getUuid()));
 
