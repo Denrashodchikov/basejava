@@ -14,13 +14,13 @@ public class ArrayStorage {
 
     public void clear() {
         size = 0;
-        Arrays.copyOf(storage, size);
+        Arrays.fill(storage, null);
     }
 
     public void update(Resume resume) {
-        int id = findSearchKey(resume.getUuid());
-        if (id >= 0) {
-            storage[id] = resume;
+        int index = findSearchKey(resume.getUuid());
+        if (index >= 0) {
+            storage[index] = resume;
         } else {
             System.out.println("Uuid: " + resume.getUuid() + " not found!");
         }
@@ -38,9 +38,9 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int id = findSearchKey(uuid);
-        if (id >= 0) {
-            return storage[id];
+        int index = findSearchKey(uuid);
+        if (index >= 0) {
+            return storage[index];
         } else {
             System.out.println("Uuid: " + uuid + " not found!");
             return null;
@@ -48,11 +48,13 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int id = findSearchKey(uuid);
-        if (id >= 0) {
-            storage[id] = storage[size - 1];
+        int index = findSearchKey(uuid);
+        if (index >= 0) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
+        } else {
+            System.out.println("Element with uuid: " + uuid + " not found.");
         }
     }
 
