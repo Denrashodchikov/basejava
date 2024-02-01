@@ -1,6 +1,6 @@
-package com.urise.webapp.storage;
+package ru.javawebinar.basejava.storage;
 
-import com.urise.webapp.model.Resume;
+import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         if (size >= storage.length) {
-            System.out.println("Storage is full!");
+            System.out.println("Storage overflow!");
         } else if (findSearchKey(resume.getUuid()) >= 0) {
             System.out.println("Resume already exist!");
         } else {
@@ -39,12 +39,11 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         int index = findSearchKey(uuid);
-        if (index >= 0) {
-            return storage[index];
-        } else {
+        if (index == -1) {
             System.out.println("Uuid: " + uuid + " not found!");
             return null;
         }
+        return storage[index];
     }
 
     public void delete(String uuid) {
