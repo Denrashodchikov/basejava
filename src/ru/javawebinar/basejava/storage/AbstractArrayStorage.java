@@ -45,6 +45,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
+
     public void save(Resume resume) {
         if (size >= STORAGE_LIMIT) {
             System.out.println("Storage overflow!");
@@ -55,6 +56,7 @@ public abstract class AbstractArrayStorage implements Storage {
             size++;
         }
     }
+
     public void delete(String uuid) {
         int index = findSearchKey(uuid);
         if (index >= 0) {
@@ -67,6 +69,8 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int findSearchKey(String uuid);
+
     protected abstract void addNewElement(Resume resume);
+
     protected abstract void removeElement(int index);
 }
