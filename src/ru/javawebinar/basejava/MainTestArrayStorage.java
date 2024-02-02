@@ -2,26 +2,33 @@ package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.ArrayStorage;
+import ru.javawebinar.basejava.storage.SortedArrayStorage;
 import ru.javawebinar.basejava.storage.Storage;
+
+import java.util.Arrays;
 
 /**
  * Test for your ru.javawebinar.basejava.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    private final static Storage ARRAY_STORAGE = new ArrayStorage();
+    //private final static Storage ARRAY_STORAGE = new ArrayStorage();
+    private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
         r1.setUuid("uuid1");
         Resume r2 = new Resume();
-        r2.setUuid("uuid2");
+        r2.setUuid("uuid5");
         Resume r3 = new Resume();
         r3.setUuid("uuid3");
         Resume r4 = new Resume();
         r4.setUuid("uuid2");
 
+        System.out.println(ARRAY_STORAGE.size());
         ARRAY_STORAGE.save(r1);
+        System.out.println(ARRAY_STORAGE.size());
         ARRAY_STORAGE.save(r2);
+        System.out.println(ARRAY_STORAGE.size());
         ARRAY_STORAGE.save(r3);
         ARRAY_STORAGE.save(r4);
 
@@ -40,7 +47,8 @@ public class MainTestArrayStorage {
         System.out.println("Get r2: " + ARRAY_STORAGE.get(r2.getUuid()));
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
-        ARRAY_STORAGE.delete(r3.getUuid());
+        System.out.println("Delete:");
+        ARRAY_STORAGE.delete(r4.getUuid());
         printAll();
         System.out.println("Size: " + ARRAY_STORAGE.size());
         ARRAY_STORAGE.clear();
