@@ -15,6 +15,19 @@ public class MainTestArrayStorage {
     private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
+        String[] strStorage = {"uuid1","uuid2","uuid2","uuid4","uuid5"};
+        System.out.println("index: " + Arrays.binarySearch(strStorage,"uuid2"));//index: 2      Возвращает индекс найденного элемента "uuid2"
+        System.out.println("index: " + Arrays.binarySearch(strStorage,0,2,"uuid2"));//index: 1      Возвращает индекс найденного элемента "uuid2" в заданном диапозоне
+        System.out.println("index: " + Arrays.binarySearch(strStorage,"uuid3"));//index: -4     Если элемента в массиве нет, то возвращает (-(insertion point) - 1), то есть строка "uuid3" имеет insertion point = 3
+        System.out.println("index: " + Arrays.binarySearch(strStorage,"uuid"));//index: -1      => строка "uuid" имеет insertion point = 0
+
+
+        try {
+            Thread.sleep(10000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Resume r1 = new Resume();
         r1.setUuid("uuid1");
         Resume r2 = new Resume();

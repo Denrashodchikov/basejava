@@ -16,7 +16,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findSearchKey(uuid);
         if (index == -1) {
             System.out.println("Uuid: " + uuid + " not found!");
@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage implements Storage {
         Arrays.fill(storage, null);
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         int index = findSearchKey(resume.getUuid());
         if (index >= 0) {
             storage[index] = resume;
@@ -46,7 +46,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public void save(Resume resume) {
+    public final void save(Resume resume) {
         if (size >= STORAGE_LIMIT) {
             System.out.println("Storage overflow!");
         } else if (findSearchKey(resume.getUuid()) >= 0) {
@@ -57,7 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = findSearchKey(uuid);
         if (index >= 0) {
             removeElement(index);
