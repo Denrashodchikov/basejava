@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.storage.ArrayStorage;
 import ru.javawebinar.basejava.storage.SortedArrayStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
@@ -28,14 +27,10 @@ public class MainTestArrayStorage {
             e.printStackTrace();
         }
 
-        Resume r1 = new Resume();
-        r1.setUuid("uuid1");
-        Resume r2 = new Resume();
-        r2.setUuid("uuid5");
-        Resume r3 = new Resume();
-        r3.setUuid("uuid3");
-        Resume r4 = new Resume();
-        r4.setUuid("uuid2");
+        Resume r1 = new Resume("uuid1");
+        Resume r2 = new Resume("uuid5");
+        Resume r3 = new Resume("uuid3");
+        Resume r4 = new Resume("uuid2");
 
         System.out.println(ARRAY_STORAGE.size());
         ARRAY_STORAGE.save(r1);
@@ -53,8 +48,7 @@ public class MainTestArrayStorage {
         printAll();
 
         System.out.println("Test method Update()");
-        Resume rUpd = new Resume();
-        rUpd.setUuid("uuuuuu");
+        Resume rUpd = new Resume("uuuuuu");
         ARRAY_STORAGE.update(rUpd);
 
         System.out.println("Get r2: " + ARRAY_STORAGE.get(r2.getUuid()));
