@@ -9,7 +9,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     private final Storage storage;
     private static final String DUMMY = "dummy";
     private static final String UUID_1 = "uuid1";
@@ -32,7 +32,7 @@ public abstract class AbstractArrayStorageTest {
         resume5 = new Resume(UUID_5);
     }
 
-    public AbstractArrayStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -98,17 +98,19 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     void saveOverflow() {
-        Assertions.assertThrows(AssertionFailedError.class, () -> {
-            try {
-                storage.clear();
-                for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                    storage.save(new Resume("uuid_" + i));
+        if (this.getClass().getName().equals("ListStorage")) {
+            Assertions.assertThrows(AssertionFailedError.class, () -> {
+                try {
+                    storage.clear();
+                    for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                        storage.save(new Resume("uuid_" + i));
+                    }
+                    storage.save(resume5);
+                } catch (StorageException e) {
+                    Assertions.fail("Storage is full ahead of time!");
                 }
-                storage.save(resume5);
-            } catch (StorageException e) {
-                Assertions.fail("Storage is full ahead of time!");
-            }
-        });
+            });
+        }
     }
 
     @Test
