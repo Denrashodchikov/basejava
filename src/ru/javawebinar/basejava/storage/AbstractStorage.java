@@ -7,48 +7,52 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public final Resume get(String uuid) {
-        int index = findSearchKey(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getElement(index);
+        Object searchKey = getNotExistingSearchKey(uuid);
+        return getElement(searchKey);
     }
 
     public final void update(Resume resume) {
-        int index = findSearchKey(resume.getUuid());
-        if (index >= 0) {
-            updateElement(index, resume);
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+        Object searchKey = getNotExistingSearchKey(resume.getUuid());
+        updateElement(searchKey, resume);
     }
 
     public final void save(Resume resume) {
-        if (findSearchKey(resume.getUuid()) >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            saveElement(resume);
-        }
+        Object searchKey = getExistingSearchKey(resume.getUuid());
+        saveElement(resume);
     }
 
     public final void delete(String uuid) {
-        int index = findSearchKey(uuid);
-        if (index >= 0) {
-            removeElement(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getNotExistingSearchKey(uuid);
+        removeElement(searchKey);
     }
 
-    protected abstract void removeElement(int index);
+    private Object getExistingSearchKey(String uuid) {
+        Object searchKey = findSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
+    }
 
-    protected abstract void updateElement(int index, Resume resume);
+    private Object getNotExistingSearchKey(String uuid) {
+        Object searchKey = findSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
 
-    protected abstract Resume getElement(int index);
+    protected abstract boolean isExist(Object searchKey);
+
+    protected abstract void removeElement(Object searchKey);
+
+    protected abstract void updateElement(Object searchKey, Resume resume);
+
+    protected abstract Resume getElement(Object searchKey);
 
     protected abstract void saveElement(Resume resume);
 
-    protected abstract int findSearchKey(String uuid);
+    protected abstract Object findSearchKey(String uuid);
 
     public abstract int size();
 

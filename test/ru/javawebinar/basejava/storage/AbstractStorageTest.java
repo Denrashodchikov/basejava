@@ -9,6 +9,10 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractStorageTest {
     private final Storage storage;
     private static final String DUMMY = "dummy";
@@ -85,8 +89,13 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAll() {
-        Resume[] resumes = new Resume[]{resume1, resume2, resume3};
-        Assertions.assertArrayEquals(storage.getAll(), resumes);
+        Resume[] resumes = new Resume[]{ resume2, resume1, resume3};
+        List<Resume> testList = new ArrayList<>(List.of(resumes));
+        Collections.sort(testList);
+        List<Resume> resultList = new ArrayList<>(List.of(storage.getAll()));
+        Collections.sort(resultList);
+        Assertions.assertArrayEquals(resultList.toArray(), testList.toArray());
+//        Assertions.assertArrayEquals(storage.getAll(), resumes);
     }
 
     @Test
@@ -96,9 +105,11 @@ public abstract class AbstractStorageTest {
         assertSize(INITIAL_SIZE + 1);
     }
 
+
+
     @Test
     void saveOverflow() {
-        if (this.getClass().getName().equals("ListStorage")) {
+        if (this.getClass().getName().equals("ListStorage") || this.getClass().getName().equals("MapStorage")) {
             Assertions.assertThrows(AssertionFailedError.class, () -> {
                 try {
                     storage.clear();

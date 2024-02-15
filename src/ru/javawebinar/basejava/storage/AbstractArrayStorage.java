@@ -19,8 +19,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
     }
 
     @Override
-    protected Resume getElement(int index) {
-        return storage[index];
+    protected Resume getElement(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     public void clear() {
@@ -29,8 +29,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
     }
 
     @Override
-    protected void updateElement(int index, Resume resume) {
-        storage[index] = resume;
+    protected void updateElement(Object searchKey, Resume resume) {
+        storage[(int) searchKey] = resume;
     }
 
     /**
@@ -50,13 +50,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
     }
 
     @Override
-    protected void removeElement(int index) {
-        remove(index);
+    protected void removeElement(Object searchKey) {
+        remove((Integer) searchKey);
         storage[size - 1] = null;
         size--;
     }
 
-    protected abstract int findSearchKey(String uuid);
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
+
+    protected abstract Object findSearchKey(String uuid);
 
     protected abstract void addNewElement(Resume resume);
 

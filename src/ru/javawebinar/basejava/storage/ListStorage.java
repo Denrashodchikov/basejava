@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getElement(int index) {
-        return storage.get(index);
+    protected Resume getElement(Object searchKey) {
+        return storage.get((Integer) searchKey);
     }
 
     @Override
@@ -30,11 +29,16 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void removeElement(int index) {
-        storage.remove(index);
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 
-    protected int findSearchKey(String uuid) {
+    @Override
+    public void removeElement(Object searchKey) {
+        storage.remove((int) searchKey);
+    }
+
+    protected Object findSearchKey(String uuid) {
         for (Resume r :
                 storage) {
             if (r.getUuid().equals(uuid)) {
@@ -44,16 +48,12 @@ public class ListStorage extends AbstractStorage {
         return -1;
     }
 
-    public void updateElement(int index, Resume resume) {
-        storage.set(index, resume);
+    public void updateElement(Object searchKey, Resume resume) {
+        storage.set((Integer) searchKey, resume);
     }
 
     public void saveElement(Resume resume) {
-        if (findSearchKey(resume.getUuid()) >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            storage.add(resume);
-        }
+        storage.add(resume);
     }
 
 
