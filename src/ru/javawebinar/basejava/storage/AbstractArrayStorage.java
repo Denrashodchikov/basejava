@@ -40,11 +40,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public final void saveElement(Resume resume) {
+    public final void saveElement(Resume resume,  Object searchKey) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow!", resume.getUuid());
         } else {
-            addNewElement(resume);
+            addNewElement(resume,(int) searchKey);
             size++;
         }
     }
@@ -63,7 +63,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
 
     protected abstract Object findSearchKey(String uuid);
 
-    protected abstract void addNewElement(Resume resume);
+    protected abstract void addNewElement(Resume resume, int index);
 
     protected abstract void remove(int index);
 }

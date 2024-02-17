@@ -13,8 +13,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void addNewElement(Resume resume) {
-        int insertionIndex = Math.abs((int) findSearchKey(resume.getUuid()) + 1);//Получаю индекс, который вернул Arrays.binarySearch
+    protected void addNewElement(Resume resume, int index) {
+        int insertionIndex = Math.abs(index + 1);//Получаю индекс, который вернул Arrays.binarySearch
         int moveCount = storage.length - 1 - insertionIndex;
         if (moveCount >= 0) {
             System.arraycopy(storage, insertionIndex, storage, insertionIndex + 1, storage.length - 1 - insertionIndex);//Сдивгаю весь массив вправо на 1 элемент

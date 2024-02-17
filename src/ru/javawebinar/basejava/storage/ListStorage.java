@@ -39,10 +39,9 @@ public class ListStorage extends AbstractStorage {
     }
 
     protected Object findSearchKey(String uuid) {
-        for (Resume r :
-                storage) {
-            if (r.getUuid().equals(uuid)) {
-                return storage.indexOf(r);
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
         return -1;
@@ -52,7 +51,7 @@ public class ListStorage extends AbstractStorage {
         storage.set((Integer) searchKey, resume);
     }
 
-    public void saveElement(Resume resume) {
+    public void saveElement(Resume resume, Object searchKey) {
         storage.add(resume);
     }
 
