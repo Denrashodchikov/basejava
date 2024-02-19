@@ -46,8 +46,7 @@ public class MainCollections {
         map.put(UUID_2,resume2);
         map.put(UUID_3,resume3);
 
-        for (String uuid :
-                map.keySet()) {
+        for (String uuid : map.keySet()) {
             System.out.println(map.get(uuid));
         }
 
@@ -55,5 +54,8 @@ public class MainCollections {
             System.out.println(entry.getValue());
         }
 
+        List<Resume> list = Arrays.asList(resume1,resume2,resume3);
+        list.remove(1);
+        System.out.println(list);
     }
 }

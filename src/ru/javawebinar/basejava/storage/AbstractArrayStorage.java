@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Array based storage for Resumes
@@ -20,7 +21,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
 
     @Override
     protected Resume getElement(Object searchKey) {
-        return storage[(int) searchKey];
+        return storage[(Integer) searchKey];
     }
 
     public void clear() {
@@ -30,21 +31,23 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
 
     @Override
     protected void updateElement(Object searchKey, Resume resume) {
-        storage[(int) searchKey] = resume;
+        storage[(Integer) searchKey] = resume;
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+    public List<Resume> getAsList() {
+        List<Resume> copyResumes = Arrays.asList(Arrays.copyOfRange(storage, 0, size));
+        return copyResumes;
+
     }
 
-    public final void saveElement(Resume resume,  Object searchKey) {
+    public final void saveElement(Resume resume, Object searchKey) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow!", resume.getUuid());
         } else {
-            addNewElement(resume,(int) searchKey);
+            addNewElement(resume, (Integer) searchKey);
             size++;
         }
     }
@@ -58,10 +61,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+        return (Integer) searchKey >= 0;
     }
 
-    protected abstract Object findSearchKey(String uuid);
+    protected abstract Integer findSearchKey(String uuid);
 
     protected abstract void addNewElement(Resume resume, int index);
 
