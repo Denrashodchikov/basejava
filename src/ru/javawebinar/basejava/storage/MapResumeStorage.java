@@ -49,8 +49,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAsList() {
-        Map<String,Resume> sortMap = new TreeMap<>(storage);
-        return new ArrayList(sortMap.values());
+        return new ArrayList(storage.values());
     }
 
 }

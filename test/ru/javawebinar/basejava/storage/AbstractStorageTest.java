@@ -61,7 +61,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void getNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> {
-            assertGet(new Resume(DUMMY));
+            assertGet(new Resume(DUMMY,DUMMY));
         });
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void saveExistStorage() {
         Assertions.assertThrows(ExistStorageException.class, () -> {
-            storage.save(new Resume(UUID_2));
+            storage.save(new Resume(UUID_2,FULLNAME_2));
         });
     }
 
