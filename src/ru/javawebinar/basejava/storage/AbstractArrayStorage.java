@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {//implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected int size;
     protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -20,8 +20,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
     }
 
     @Override
-    protected Resume getElement(Object searchKey) {
-        return storage[(Integer) searchKey];
+    protected Resume getElement(Integer searchKey) {
+        return storage[ searchKey];
     }
 
     public void clear() {
@@ -30,8 +30,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
     }
 
     @Override
-    protected void updateElement(Object searchKey, Resume resume) {
-        storage[(Integer) searchKey] = resume;
+    protected void updateElement(Integer searchKey, Resume resume) {
+        storage[ searchKey] = resume;
     }
 
     /**
@@ -43,25 +43,25 @@ public abstract class AbstractArrayStorage extends AbstractStorage {//implements
 
     }
 
-    public final void saveElement(Resume resume, Object searchKey) {
+    public final void saveElement(Resume resume, Integer searchKey) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow!", resume.getUuid());
         } else {
-            addNewElement(resume, (Integer) searchKey);
+            addNewElement(resume,searchKey);
             size++;
         }
     }
 
     @Override
-    protected void removeElement(Object searchKey) {
-        remove((Integer) searchKey);
+    protected void removeElement(Integer searchKey) {
+        remove( searchKey);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     protected abstract Integer findSearchKey(String uuid);

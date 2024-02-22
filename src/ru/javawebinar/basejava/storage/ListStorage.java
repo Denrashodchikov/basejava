@@ -4,17 +4,17 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     protected List<Resume> storage = new ArrayList<>();
-    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
+
     @Override
     public int size() {
         return storage.size();
     }
 
     @Override
-    protected Resume getElement(Object searchKey) {
-        return storage.get((Integer) searchKey);
+    protected Resume getElement(Integer searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
@@ -28,16 +28,16 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
-    public void removeElement(Object searchKey) {
-        storage.remove((int) searchKey);
+    public void removeElement(Integer searchKey) {
+        storage.remove(searchKey.intValue());
     }
 
-    protected Object findSearchKey(String uuid) {
+    protected Integer findSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -46,11 +46,11 @@ public class ListStorage extends AbstractStorage {
         return -1;
     }
 
-    public void updateElement(Object searchKey, Resume resume) {
-        storage.set((Integer) searchKey, resume);
+    public void updateElement(Integer searchKey, Resume resume) {
+        storage.set(searchKey, resume);
     }
 
-    public void saveElement(Resume resume, Object searchKey) {
+    public void saveElement(Resume resume, Integer searchKey) {
         storage.add(resume);
     }
 
