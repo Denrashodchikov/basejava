@@ -55,6 +55,7 @@ public class MainCollections {
         }
 
         List<Resume> list = Arrays.asList(resume1,resume2,resume3);
+        list = new ArrayList<Resume>();
         list.remove(1);
         System.out.println(list);
     }
