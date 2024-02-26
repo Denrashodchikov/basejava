@@ -6,15 +6,16 @@ public class TestSingleton {
     private static TestSingleton instance;
 
     public static TestSingleton getInstance() {
-        if(instance==null){
+        if (instance == null) {
             instance = new TestSingleton();
         }
         return instance;
     }
-    private TestSingleton(){
+
+    private TestSingleton() {
     }
 
-    public enum Singleton{
+    public enum Singleton {
         INSTANCE
     }
 
@@ -24,5 +25,6 @@ public class TestSingleton {
         for (SectionType type : SectionType.values()) {
             System.out.println(type.getTitle());
         }
+
     }
 }
