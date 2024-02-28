@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CompanySection extends Section {
     private List<Company> companies;
@@ -10,6 +11,7 @@ public class CompanySection extends Section {
     }
 
     public void setCompanies(List<Company> companies) {
+        Objects.requireNonNull(companies, "companies must not be null");
         this.companies = companies;
     }
 

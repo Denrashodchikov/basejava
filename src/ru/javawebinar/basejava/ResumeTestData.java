@@ -1,8 +1,10 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 import static ru.javawebinar.basejava.model.SectionType.*;
@@ -15,7 +17,8 @@ public class ResumeTestData {
         map.put(ContactType.PHONE, "8800553535");
         map.put(ContactType.SKYPE, "grigoriy");
         map.put(ContactType.EMAIL, "kislin@gmail.com");
-        resume.setContacts(map);
+        //resume.setContacts(map);
+
 
         Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
         //TextSection
@@ -63,25 +66,25 @@ public class ResumeTestData {
         period_1.setEndDate(LocalDate.now());
         period_1.setTitle("Автор проекта.");
         period_1.setDescription("Создание, организация и проведение Java онлайн проектов и стажировок.");
-        company_1.setName("Java Online Projects");
-        company_1.setWebsite("https://javaops.ru/");
+        //company_1.setName("Java Online Projects");
+        //company_1.setWebsite("https://javaops.ru/");
         company_1.setPeriods(List.of(period_1));
         companyList.add(company_1);
 
         Company company_2 = new Company();
         Period period_2 = new Period();
-        period_2.setStartDate(LocalDate.of(2014,10,1));
-        period_2.setEndDate(LocalDate.of(2016,1,1));
+        period_2.setStartDate(DateUtil.of(2014, Month.OCTOBER));
+        period_2.setEndDate(DateUtil.of(2016,Month.JANUARY));
         period_2.setTitle("Старший разработчик (backend)");
         period_2.setDescription("Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
-        company_2.setName("Wrike");
-        company_2.setWebsite("https://www.wrike.com/");
+        //company_2.setName("Wrike");
+        //company_2.setWebsite("https://www.wrike.com/");
         company_2.setPeriods(List.of(period_2));
         companyList.add(company_2);
 
         Company company_3 = new Company();
-        company_3.setName("Wrike");
-        company_3.setWebsite("https://www.wrike.com/");
+        //company_3.setName("Wrike");
+        //company_3.setWebsite("https://www.wrike.com/");
         company_3.setPeriods(List.of(new Period(LocalDate.of(2012,1,1),LocalDate.of(2014,10,1),"Java архитектор","Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python")));
         companyList.add(company_3);
 
@@ -92,24 +95,24 @@ public class ResumeTestData {
         CompanySection educationSection = new CompanySection();
         List<Company> companyList2 = new ArrayList<>();
         Company edu_1 = new Company();
-        edu_1.setName("Заочная физико-техническая школа при МФТИ");
-        edu_1.setWebsite("https://mipt.ru/");
+//        edu_1.setName("Заочная физико-техническая школа при МФТИ");
+//        edu_1.setWebsite("https://mipt.ru/");
         edu_1.setPeriods(List.of(new Period(LocalDate.of(1984,9,1),LocalDate.of(1987,6,1),"Закончил с отличием","")));
         companyList2.add(edu_1);
         Company edu_2 = new Company();
-        edu_2.setName("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики");
-        edu_2.setWebsite("http://www.ifmo.ru/");
+//        edu_2.setName("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики");
+//        edu_2.setWebsite("http://www.ifmo.ru/");
         edu_2.setPeriods(List.of(new Period(LocalDate.of(1993,9,1),LocalDate.of(1996,7,1),"Аспирантура (программист С, С++)",""),
                 new Period(LocalDate.of(1987,9,1),LocalDate.of(1993,7,1),"Инженер (программист Fortran, C)","")));
         companyList2.add(edu_2);
         Company edu_3 = new Company();
-        edu_3.setName("Alcatel");
-        edu_3.setWebsite("http://www.alcatel.ru/");
+//        edu_3.setName("Alcatel");
+//        edu_3.setWebsite("http://www.alcatel.ru/");
         edu_3.setPeriods(List.of(new Period(LocalDate.of(1997,9,1),LocalDate.of(1998,3,1),"6 месяцев обучения цифровым телефонным сетям (Москва)","")));
         companyList2.add(edu_3);
         Company edu_4 = new Company();
-        edu_4.setName("Siemens AG");
-        edu_4.setWebsite("http://www.siemens.ru/");
+//        edu_4.setName("Siemens AG");
+//        edu_4.setWebsite("http://www.siemens.ru/");
         edu_4.setPeriods(List.of(new Period(LocalDate.of(2005,1,1),LocalDate.of(2005,4,1),"3 месяца обучения мобильным IN сетям (Берлин)","")));
         companyList2.add(edu_4);
 
@@ -125,7 +128,7 @@ public class ResumeTestData {
         sections.put(QUALIFICATIONS,listSection_2);
         sections.put(EXPERIENCE,experienceSection);
         sections.put(EDUCATION,educationSection);
-        resume.setSections(sections);
+        //resume.setSections(sections);
 
         System.out.println(resume);
 

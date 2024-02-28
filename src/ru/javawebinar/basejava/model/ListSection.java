@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListSection extends Section {
     private List<String> listText = new ArrayList<>();
@@ -11,6 +12,7 @@ public class ListSection extends Section {
     }
 
     public void setListText(List<String> listText) {
+        Objects.requireNonNull(listText, "listText must not be null");
         this.listText = listText;
     }
 

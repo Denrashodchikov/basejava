@@ -9,7 +9,7 @@ public enum ContactType {
     STACKOVERFLOW("StackoverFlow"),
     HOMEPAGE("Home Page");
 
-    public String getTitle() {
+    public final String getTitle() {
         return title;
     }
 
