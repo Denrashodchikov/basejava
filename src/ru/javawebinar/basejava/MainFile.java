@@ -12,19 +12,35 @@ public class MainFile {
         //System.out.println(file.getCanonicalFile());
         File dir = new File("./src/ru/javawebinar/basejava");
         //System.out.println(dir.getCanonicalFile());
-        System.out.println(dir.isDirectory());
+       // System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
             for (String name : list) {
-                System.out.println(name);
+               // System.out.println(name);
             }
         }
 
-
         try (FileInputStream fis = new FileInputStream(filePath)) {
-            System.out.println(fis.read());
+            //System.out.println(fis.read());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        //HOMEWORK 8
+        System.out.println("_____HOMEWORK 8________");
+        File directory = new File("/Users/denisrashodcikov/IdeaProjects/basejava");
+        //File directory = new File("/Users/denisrashodcikov/IdeaProjects/basejava/src/ru/javawebinar/basejava");
+        getFilesList(directory);
+
+    }
+
+    public static void getFilesList(File file){
+        if(file.isDirectory()){
+            for (File f : file.listFiles()) {
+                getFilesList(f);
+            }
+        }else{
+            System.out.println(file.getName());
         }
     }
 }

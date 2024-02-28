@@ -20,7 +20,13 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
+    public void setContacts(ContactType type, String value) {
+        contacts.put(type, value);
+    }
 
+    public void setSections(SectionType type, Section section) {
+        sections.put(type, section);
+    }
 
     public Resume() {
         this(UUID.randomUUID().toString());

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static ru.javawebinar.basejava.ResumeTestData.createResume;
 
 
 public abstract class AbstractStorageTest {
@@ -34,11 +35,11 @@ public abstract class AbstractStorageTest {
     private static final int INITIAL_SIZE = 3;
 
     static {
-        resume1 = new Resume(UUID_1,FULLNAME_1);
-        resume2 = new Resume(UUID_2,FULLNAME_2);
-        resume3 = new Resume(UUID_3,FULLNAME_3);
-        resume4 = new Resume(UUID_4,FULLNAME_4);
-        resume5 = new Resume(UUID_5,FULLNAME_5);
+        resume1 = createResume(UUID_1,FULLNAME_1);
+        resume2 = createResume(UUID_2,FULLNAME_2);
+        resume3 = createResume(UUID_3,FULLNAME_3);
+        resume4 = createResume(UUID_4,FULLNAME_4);
+        resume5 = createResume(UUID_5,FULLNAME_5);
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -61,7 +62,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void getNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> {
-            assertGet(new Resume(DUMMY,DUMMY));
+            assertGet(createResume(DUMMY,DUMMY));
         });
     }
 
@@ -79,7 +80,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume r3 = new Resume(UUID_3,"new Name");
+        Resume r3 = createResume(UUID_3,"new Name");
         storage.update(r3);
         assertGet(r3);
         assertSize(INITIAL_SIZE);
@@ -88,7 +89,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void updateNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.update(new Resume(UUID_4,FULLNAME_4));
+            storage.update(createResume(UUID_4,FULLNAME_4));
         });
     }
 
@@ -109,7 +110,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void saveExistStorage() {
         Assertions.assertThrows(ExistStorageException.class, () -> {
-            storage.save(new Resume(UUID_2,FULLNAME_2));
+            storage.save(createResume(UUID_2,FULLNAME_2));
         });
     }
 

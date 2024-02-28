@@ -1,0 +1,95 @@
+package ru.javawebinar.basejava.storage;
+
+import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.model.Resume;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public abstract class AbstractFileStorage extends AbstractStorage<File> {
+    private File directory;
+
+    protected AbstractFileStorage(File directory) {
+        Objects.requireNonNull(directory, "dir must not be null");
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " directory is not directory");
+        }
+        if (!directory.canRead() || !directory.canWrite()) {
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " directory is not readeble/writeble");
+        }
+        this.directory = directory;
+    }
+
+    @Override
+    protected List<Resume> getAsList() {
+        Objects.requireNonNull(directory.listFiles());
+        List<Resume> resumesList = new ArrayList<>();
+        for (File f : directory.listFiles()) {
+            resumesList.add(doRead(f));
+        }
+        return resumesList;
+    }
+
+    @Override
+    protected boolean isExist(File file) {
+        return file.exists();
+    }
+
+    @Override
+    protected void removeElement(File file) {
+        file.delete();
+    }
+
+    @Override
+    protected void updateElement(File file, Resume resume) {
+        try {
+            doWrite(resume, file);
+        } catch (IOException e) {
+            throw new StorageException("IO Error", file.getName(), e);
+        }
+    }
+
+    @Override
+    protected Resume getElement(File file) {
+        Resume resume = doRead(file);
+        return resume;
+    }
+
+
+    @Override
+    protected void saveElement(Resume resume, File file) {
+        try {
+            file.createNewFile();
+            doWrite(resume, file);
+        } catch (IOException e) {
+            throw new StorageException("IO Error", file.getName(), e);
+        }
+    }
+
+    @Override
+    protected File findSearchKey(String uuid) {
+        return new File(directory, uuid);
+    }
+
+    @Override
+    public void clear() {
+        Objects.requireNonNull(directory.listFiles());
+        for (File f : directory.listFiles()) {
+            f.delete();
+        }
+        ;
+    }
+
+    @Override
+    public int size() {
+        return directory.listFiles().length;
+    }
+
+    protected abstract void doWrite(Resume resume, File file) throws IOException;
+
+    protected abstract Resume doRead(File file);
+
+}
