@@ -3,6 +3,7 @@ package ru.javawebinar.basejava;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class MainFile {
     public static void main(String[] args) {
@@ -12,11 +13,11 @@ public class MainFile {
         //System.out.println(file.getCanonicalFile());
         File dir = new File("./src/ru/javawebinar/basejava");
         //System.out.println(dir.getCanonicalFile());
-       // System.out.println(dir.isDirectory());
+        // System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
             for (String name : list) {
-               // System.out.println(name);
+                // System.out.println(name);
             }
         }
 
@@ -34,12 +35,12 @@ public class MainFile {
 
     }
 
-    public static void getFilesList(File file){
-        if(file.isDirectory()){
-            for (File f : file.listFiles()) {
+    public static void getFilesList(File file) {
+        if (file.isDirectory()) {
+            for (File f : Objects.requireNonNull(file.listFiles())) {
                 getFilesList(f);
             }
-        }else{
+        } else {
             System.out.println(file.getName());
         }
     }

@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "dir must not be null");
@@ -25,10 +26,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getAsList() {
-        Objects.requireNonNull(directory.listFiles());
         List<Resume> resumesList = new ArrayList<>();
-        for (File f : directory.listFiles()) {
-            resumesList.add(doRead(f));
+        for (File f : Objects.requireNonNull(directory.listFiles())) {
+            resumesList.add(getElement(f));
         }
         return resumesList;
     }
@@ -40,7 +40,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void removeElement(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("File doesn't delete : ", file.getName());
+        }
     }
 
     @Override
@@ -54,7 +56,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume getElement(File file) {
-        Resume resume = doRead(file);
+        Resume resume;
+        try {
+            resume = doRead(file);
+        } catch (IOException e) {
+            throw new NotExistStorageException("");
+        }
         return resume;
     }
 
@@ -76,20 +83,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        Objects.requireNonNull(directory.listFiles());
-        for (File f : directory.listFiles()) {
-            f.delete();
+        for (File f : Objects.requireNonNull(directory.listFiles())) {
+            removeElement(f);
         }
-        ;
     }
 
     @Override
     public int size() {
-        return directory.listFiles().length;
+        return Objects.requireNonNull(directory.listFiles()).length;
     }
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;
 
-    protected abstract Resume doRead(File file);
+    protected abstract Resume doRead(File file) throws IOException;
 
 }
