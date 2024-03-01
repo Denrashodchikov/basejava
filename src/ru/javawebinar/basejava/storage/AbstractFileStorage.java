@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
@@ -26,8 +25,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getAsList() {
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory is empty: ", directory.getName());
+        }
         List<Resume> resumesList = new ArrayList<>();
-        for (File f : Objects.requireNonNull(directory.listFiles())) {
+        for (File f : directory.listFiles()) {
             resumesList.add(getElement(f));
         }
         return resumesList;
@@ -60,7 +62,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             resume = doRead(file);
         } catch (IOException e) {
-            throw new NotExistStorageException("");
+            throw new StorageException("Unable to read file:", file.getName());
         }
         return resume;
     }
@@ -83,14 +85,20 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File f : Objects.requireNonNull(directory.listFiles())) {
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory is empty: ", directory.getName());
+        }
+        for (File f : directory.listFiles()) {
             removeElement(f);
         }
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.listFiles()).length;
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory is empty: ", directory.getName());
+        }
+        return directory.listFiles().length;
     }
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;

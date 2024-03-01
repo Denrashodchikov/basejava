@@ -1,8 +1,9 @@
 package ru.javawebinar.basejava.storage;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -10,12 +11,11 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static ru.javawebinar.basejava.ResumeTestData.createResume;
 
 
 public abstract class AbstractStorageTest {
-    final Storage storage;
+    protected final Storage storage;
     private static final String DUMMY = "dummy";
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -27,26 +27,17 @@ public abstract class AbstractStorageTest {
     private static final String FULLNAME_3 = "uuid3_full";
     private static final String FULLNAME_4 = "uuid4_full";
     private static final String FULLNAME_5 = "uuid5_full";
-    private static final Resume resume1;
-    private static final Resume resume2;
-    private static final Resume resume3;
-    private static final Resume resume4;
-    static final Resume resume5;
+    private static final Resume resume1= createResume(UUID_1,FULLNAME_1);
+    private static final Resume resume2 = createResume(UUID_2,FULLNAME_2);
+    private static final Resume resume3 = createResume(UUID_3,FULLNAME_3);
+    private static final Resume resume4 = createResume(UUID_4,FULLNAME_4);
     private static final int INITIAL_SIZE = 3;
-
-    static {
-        resume1 = createResume(UUID_1,FULLNAME_1);
-        resume2 = createResume(UUID_2,FULLNAME_2);
-        resume3 = createResume(UUID_3,FULLNAME_3);
-        resume4 = createResume(UUID_4,FULLNAME_4);
-        resume5 = createResume(UUID_5,FULLNAME_5);
-    }
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         storage.clear();
         storage.save(resume1);
@@ -96,14 +87,14 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> list = storage.getAllSorted();
-        assertEquals(3, list.size());
-        assertEquals(list, Arrays.asList(resume1, resume2, resume3));
+        Assertions.assertEquals(3, list.size());
+        Assertions.assertEquals(list, Arrays.asList(resume1, resume2, resume3));
     }
 
     @Test
     public void save() {
-        storage.save(resume5);
-        assertGet(resume5);
+        storage.save(resume4);
+        assertGet(resume4);
         assertSize(INITIAL_SIZE + 1);
     }
 
@@ -131,10 +122,10 @@ public abstract class AbstractStorageTest {
     }
 
     private void assertSize(int size) {
-        assertEquals(size, storage.size());
+        Assertions.assertEquals(size, storage.size());
     }
 
     private void assertGet(Resume resume) {
-        assertEquals(storage.get(resume.getUuid()), resume);
+        Assertions.assertEquals(storage.get(resume.getUuid()), resume);
     }
 }
