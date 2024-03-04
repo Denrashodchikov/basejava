@@ -12,6 +12,8 @@ import org.junit.platform.suite.api.Suite;
         SortedArrayStorageTest.class,
         ListStorageTest.class,
         MapUuidStorageTest.class,
+        ObjectStreamStorageTest.class,
+        ObjectStreamPathStorageTest.class,
         MapResumeStorageTest.class })
 public class SuiteTestClass {
 

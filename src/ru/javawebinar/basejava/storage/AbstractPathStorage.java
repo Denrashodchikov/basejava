@@ -24,61 +24,58 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAsList() {
-        Path[] listFiles = directory.listPaths();
-        if (listPaths == null) {
-            throw new StorageException("Directory is empty: ", directory.getName());
+        if (directory == null) {
+            throw new StorageException("Directory is empty: ", directory.toString());
         }
-        List<Resume> resumesList = new ArrayList<>();
-        for (Path f : listPaths) {
-            resumesList.add(getElement(f));
-        }
-        return resumesList;
-    }
-
-    @Override
-    protected boolean isExist(Path Path) {
-        return Path.exists();
-    }
-
-    @Override
-    protected void removeElement(Path Path) {
-        if (!Path.delete()) {
-            throw new StorageException("Path doesn't delete : ", Path.getName());
-        }
-    }
-
-    @Override
-    protected void updateElement(Path Path, Resume resume) {
         try {
-            doWrite(resume, new BufferedOutputStream(new PathOutputStream(Path)));
+            List<Resume> resumesList = new ArrayList<>();
+            Files.list(directory).forEach(path -> resumesList.add(getElement(path)));
+            return resumesList;
         } catch (IOException e) {
-            throw new StorageException("IO Error", Path.getName(), e);
+            throw new StorageException("Error get as list ", directory.toString());
         }
     }
 
     @Override
-    protected Resume getElement(Path Path) {
+    protected boolean isExist(Path path) {
+        return Files.exists(path);
+    }
+
+    @Override
+    protected void removeElement(Path path) {
         try {
-            return doRead(new BufferedInputStream(new PathInputStream(Path)));
+            Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new StorageException("Unable to read Path:", Path.getName());
+            throw new StorageException("Path doesn't delete : ", path.toString());
         }
     }
 
+    @Override
+    protected void updateElement(Path path, Resume resume) {
+        try {
+            doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+        } catch (IOException e) {
+            throw new StorageException("IO Error", path.toString(), e);
+        }
+    }
 
     @Override
-    protected void saveElement(Resume resume, Path Path) {
+    protected Resume getElement(Path path) {
         try {
-            Path.createNewPath();
-            updateElement(Path, resume);
+            return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("IO Error", Path.getName(), e);
+            throw new StorageException("Unable to read Path:", path.toString());
         }
+    }
+
+    @Override
+    protected void saveElement(Resume resume, Path path) {
+        updateElement(path, resume);
     }
 
     @Override
     protected Path findSearchKey(String uuid) {
-        return new Path(directory, uuid);
+        return Paths.get(directory.toAbsolutePath()+ "/" + uuid);
     }
 
     @Override
@@ -92,15 +89,15 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        Path[] listPaths = directory.listPaths();
-        if (listPaths == null) {
-            throw new StorageException("Directory is empty: ", directory.getName());
+        try {
+            return (int) Files.list(directory).count();
+        } catch (IOException e) {
+            throw new StorageException("Directory is empty: ", directory.toString());
         }
-        return listPaths.length;
     }
 
-    protected abstract void doWrite(Resume resume, OutputStream Path) throws IOException;
+    protected abstract void doWrite(Resume resume, OutputStream path) throws IOException;
 
-    protected abstract Resume doRead(InputStream Path) throws IOException;
+    protected abstract Resume doRead(InputStream path) throws IOException;
 
 }
