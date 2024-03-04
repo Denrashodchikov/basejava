@@ -7,9 +7,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -28,11 +28,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new StorageException("Directory is empty: ", directory.toString());
         }
         try {
-            List<Resume> resumesList = new ArrayList<>();
-            Files.list(directory).forEach(path -> resumesList.add(getElement(path)));
+            List<Resume> resumesList;
+            resumesList = Files.list(directory).map(this::getElement).collect(Collectors.toList());
             return resumesList;
         } catch (IOException e) {
-            throw new StorageException("Error get as list ", directory.toString());
+            throw new StorageException("Error get a list ", directory.toString());
         }
     }
 
