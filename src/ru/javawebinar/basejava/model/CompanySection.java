@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends Section {
+    private static final long serialVersionUID = 1L;
+
     private List<Company> companies;
 
     public List<Company> getCompanies() {

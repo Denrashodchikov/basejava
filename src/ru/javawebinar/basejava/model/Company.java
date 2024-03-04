@@ -3,6 +3,8 @@ package ru.javawebinar.basejava.model;
 import java.util.List;
 
 public class Company extends Section {
+    private static final long serialVersionUID = 1L;
+
     private Link homePage;
     private List<Period> periods;
 
