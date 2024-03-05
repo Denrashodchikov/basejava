@@ -5,21 +5,21 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamPathStorage extends AbstractPathStorage {
+public class ObjectStreamPathStorage implements SerializableStrategy {//extends AbstractPathStorage
 
     protected ObjectStreamPathStorage(String directory) {
-        super(directory);
+        //super(directory);
     }
 
     @Override
-    protected void doWrite(Resume resume, OutputStream os) throws IOException {
+    public void doWrite(Resume resume, OutputStream os) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(resume);
         }
     }
 
     @Override
-    protected Resume doRead(InputStream path) throws IOException {
+    public Resume doRead(InputStream path) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(path)) {
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {

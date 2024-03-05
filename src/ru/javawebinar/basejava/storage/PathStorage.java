@@ -11,15 +11,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
-    protected AbstractPathStorage(String dir) {
+    private final SerializableStrategy serializableStrategy;
+
+    protected PathStorage(String dir, SerializableStrategy serializableStrategy) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "dir must not be null");
+        Objects.requireNonNull(serializableStrategy, "serializableStrategy must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " directory is not readeble/writeble");
         }
+        this.serializableStrategy = serializableStrategy;
     }
 
     @Override
@@ -53,7 +57,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void updateElement(Path path, Resume resume) {
         try {
-            doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            serializableStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IO Error", path.toString(), e);
         }
@@ -62,7 +66,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getElement(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializableStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Unable to read Path:", path.toString());
         }
@@ -75,7 +79,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path findSearchKey(String uuid) {
-        return Paths.get(directory.toAbsolutePath()+ "/" + uuid);
+        return Paths.get(directory.toAbsolutePath() + "/" + uuid);
     }
 
     @Override
@@ -95,9 +99,4 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new StorageException("Directory is empty: ", directory.toString());
         }
     }
-
-    protected abstract void doWrite(Resume resume, OutputStream path) throws IOException;
-
-    protected abstract Resume doRead(InputStream path) throws IOException;
-
 }
