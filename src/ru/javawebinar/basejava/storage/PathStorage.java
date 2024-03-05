@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.strategy.SerializableStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,13 +29,8 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAsList() {
-        if (directory == null) {
-            throw new StorageException("Directory is empty: ", directory.toString());
-        }
         try {
-            List<Resume> resumesList;
-            resumesList = Files.list(directory).map(this::getElement).collect(Collectors.toList());
-            return resumesList;
+            return Files.list(directory).map(this::getElement).collect(Collectors.toList());
         } catch (IOException e) {
             throw new StorageException("Error get a list ", directory.toString());
         }
@@ -74,12 +70,17 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void saveElement(Resume resume, Path path) {
+        try {
+            Files.createFile(path);
+        } catch (IOException e) {
+            throw new StorageException("Save Error", path.toString(), e);
+        }
         updateElement(path, resume);
     }
 
     @Override
     protected Path findSearchKey(String uuid) {
-        return Paths.get(directory.toAbsolutePath() + "/" + uuid);
+        return directory.resolve(uuid);
     }
 
     @Override

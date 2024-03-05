@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.strategy.SerializableStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,12 +30,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getAsList() {
-        File[] listFiles = directory.listFiles();
-        if (listFiles == null) {
-            throw new StorageException("Directory is empty: ", directory.getName());
-        }
         List<Resume> resumesList = new ArrayList<>();
-        for (File f : listFiles) {
+        for (File f : getListFiles()) {
             resumesList.add(getElement(f));
         }
         return resumesList;
@@ -74,10 +71,10 @@ public class FileStorage extends AbstractStorage<File> {
     protected void saveElement(Resume resume, File file) {
         try {
             file.createNewFile();
-            updateElement(file, resume);
         } catch (IOException e) {
-            throw new StorageException("IO Error", file.getName(), e);
+            throw new StorageException("Save Error", file.getName(), e);
         }
+        updateElement(file, resume);
     }
 
     @Override
@@ -87,21 +84,21 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] listFiles = directory.listFiles();
-        if (listFiles == null) {
-            throw new StorageException("Directory is empty: ", directory.getName());
-        }
-        for (File f : listFiles) {
+        for (File f : getListFiles()) {
             removeElement(f);
         }
     }
 
     @Override
     public int size() {
+        return getListFiles().length;
+    }
+
+    private File[] getListFiles() {
         File[] listFiles = directory.listFiles();
         if (listFiles == null) {
             throw new StorageException("Directory is empty: ", directory.getName());
         }
-        return listFiles.length;
+        return listFiles;
     }
 }
