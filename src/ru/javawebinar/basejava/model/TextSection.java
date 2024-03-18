@@ -7,6 +7,9 @@ public class TextSection extends Section {
 
     private String text;
 
+    public TextSection() {
+    }
+
     public String getText() {
         return text;
     }
