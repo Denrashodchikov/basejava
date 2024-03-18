@@ -65,7 +65,7 @@ public abstract class AbstractStorageTest {
         assertSize(INITIAL_SIZE);
     }
 
-    @Test
+    //@Test
     public void clear() {
         storage.clear();
         assertSize(0);

@@ -3,9 +3,9 @@ package ru.javawebinar.basejava;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.util.DateUtil;
 
-import java.time.LocalDate;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.javawebinar.basejava.model.SectionType.*;
 
@@ -58,8 +58,8 @@ public class ResumeTestData {
         List<Company> companyList = new ArrayList<>();
         Company company_1 = new Company();
         Period period_1 = new Period();
-        period_1.setStartDate(LocalDate.of(2013,10,1));
-        period_1.setEndDate(LocalDate.now());
+        period_1.setStartDate(DateUtil.of(2013,Month.OCTOBER));
+        period_1.setEndDate(DateUtil.NOW);
         period_1.setTitle("Автор проекта.");
         period_1.setDescription("Создание, организация и проведение Java онлайн проектов и стажировок.");
         company_1.setHomePage(new Link("Java Online Projects","https://javaops.ru/"));
@@ -79,7 +79,7 @@ public class ResumeTestData {
 
         Company company_3 = new Company();
         company_3.setHomePage(new Link("Wrike","https://www.wrike.com/"));
-        company_3.setPeriods(List.of(new Period(LocalDate.of(2012,1,1),LocalDate.of(2014,10,1),"Java архитектор","Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python")));
+        company_3.setPeriods(List.of(new Period(DateUtil.of(2012,Month.JANUARY),DateUtil.of(2014,Month.OCTOBER),"Java архитектор","Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python")));
         companyList.add(company_3);
 
         experienceSection.setCompanies(companyList);
@@ -90,20 +90,20 @@ public class ResumeTestData {
         List<Company> companyList2 = new ArrayList<>();
         Company edu_1 = new Company();
         edu_1.setHomePage(new Link("Заочная физико-техническая школа при МФТИ","https://mipt.ru/"));
-        edu_1.setPeriods(List.of(new Period(LocalDate.of(1984,9,1),LocalDate.of(1987,6,1),"Закончил с отличием","")));
+        edu_1.setPeriods(List.of(new Period(DateUtil.of(1984,Month.SEPTEMBER),DateUtil.of(1987,Month.JUNE),"Закончил с отличием","")));
         companyList2.add(edu_1);
         Company edu_2 = new Company();
         edu_2.setHomePage(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики","http://www.ifmo.ru/"));
-        edu_2.setPeriods(List.of(new Period(LocalDate.of(1993,9,1),LocalDate.of(1996,7,1),"Аспирантура (программист С, С++)",""),
-                new Period(LocalDate.of(1987,9,1),LocalDate.of(1993,7,1),"Инженер (программист Fortran, C)","")));
+        edu_2.setPeriods(List.of(new Period(DateUtil.of(1993,Month.SEPTEMBER),DateUtil.of(1996,Month.JULY),"Аспирантура (программист С, С++)",""),
+                new Period(DateUtil.of(1987,Month.SEPTEMBER),DateUtil.of(1993,Month.JULY),"Инженер (программист Fortran, C)","")));
         companyList2.add(edu_2);
         Company edu_3 = new Company();
         edu_3.setHomePage(new Link("Alcatel","http://www.alcatel.ru/"));
-        edu_3.setPeriods(List.of(new Period(LocalDate.of(1997,9,1),LocalDate.of(1998,3,1),"6 месяцев обучения цифровым телефонным сетям (Москва)","")));
+        edu_3.setPeriods(List.of(new Period(DateUtil.of(1997,Month.SEPTEMBER),DateUtil.of(1998,Month.MARCH),"6 месяцев обучения цифровым телефонным сетям (Москва)","")));
         companyList2.add(edu_3);
         Company edu_4 = new Company();
         edu_4.setHomePage(new Link("Siemens AG","http://www.siemens.ru/"));
-        edu_4.setPeriods(List.of(new Period(LocalDate.of(2005,1,1),LocalDate.of(2005,4,1),"3 месяца обучения мобильным IN сетям (Берлин)","")));
+        edu_4.setPeriods(List.of(new Period(DateUtil.of(2005,Month.JANUARY),DateUtil.of(2005,Month.APRIL),"3 месяца обучения мобильным IN сетям (Берлин)","")));
         companyList2.add(edu_4);
         educationSection.setCompanies(companyList2);
 
