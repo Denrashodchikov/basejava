@@ -10,6 +10,10 @@ public class TextSection extends Section {
     public TextSection() {
     }
 
+    public TextSection(String text) {
+        this.text = text;
+    }
+
     public String getText() {
         return text;
     }
