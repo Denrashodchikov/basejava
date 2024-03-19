@@ -28,15 +28,15 @@ public class DataStreamSerializer implements SerializableStrategy {
                 SectionType sectionType = entry.getKey();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
-                    case OBJECTIVE,PERSONAL-> dos.writeUTF(((TextSection) entry.getValue()).getText());
-                    case ACHIEVEMENT,QUALIFICATIONS-> {
+                    case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) entry.getValue()).getText());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         ListSection listSection = (ListSection) entry.getValue();
                         dos.writeInt(listSection.getListText().size());
                         for (String s : listSection.getListText()) {
                             dos.writeUTF(s);
                         }
                     }
-                    case EXPERIENCE,EDUCATION-> {
+                    case EXPERIENCE, EDUCATION -> {
                         CompanySection companySection = (CompanySection) entry.getValue();
                         dos.writeInt(companySection.getCompanies().size());
                         for (Company company : companySection.getCompanies()) {
@@ -71,7 +71,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> resume.setSections(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT,QUALIFICATIONS -> {
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         int sizeListSec = dis.readInt();
                         ListSection listSection = new ListSection();
                         List<String> list = new ArrayList<>();
@@ -81,17 +81,17 @@ public class DataStreamSerializer implements SerializableStrategy {
                         listSection.setListText(list);
                         resume.setSections(sectionType, listSection);
                     }
-                    case EXPERIENCE,EDUCATION -> {
+                    case EXPERIENCE, EDUCATION -> {
                         int sizeComp = dis.readInt();
                         CompanySection companySection = new CompanySection();
                         List<Company> companyList = new ArrayList<>();
                         for (int j = 0; j < sizeComp; j++) {
                             Company company = new Company();
-                            company.setHomePage(new Link(dis.readUTF(),dis.readUTF()));
+                            company.setHomePage(new Link(dis.readUTF(), dis.readUTF()));
                             int sizePeriods = dis.readInt();
                             List<Period> periodList = new ArrayList<>();
                             for (int k = 0; k < sizePeriods; k++) {
-                                periodList.add(new Period(parseDate(dis.readUTF()),parseDate(dis.readUTF()),dis.readUTF(),dis.readUTF()));
+                                periodList.add(new Period(parseDate(dis.readUTF()), parseDate(dis.readUTF()), dis.readUTF(), dis.readUTF()));
                             }
                             company.setPeriods(periodList);
                             companyList.add(company);
@@ -105,9 +105,9 @@ public class DataStreamSerializer implements SerializableStrategy {
         }
     }
 
-    private LocalDate parseDate(String date){
+    private LocalDate parseDate(String date) {
         String[] arrDt = date.split("-");
-        return DateUtil.of(Integer.parseInt(arrDt[0]),Month.of(Integer.parseInt(arrDt[1])));
+        return DateUtil.of(Integer.parseInt(arrDt[0]), Month.of(Integer.parseInt(arrDt[1])));
     }
 
 
