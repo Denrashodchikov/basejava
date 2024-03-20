@@ -15,24 +15,20 @@ public class DataStreamSerializer implements SerializableStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            writeWithException(resume.getContacts().entrySet(), dos, x -> {
-                Map.Entry<ContactType, String> entry = (Map.Entry<ContactType, String>) x;
+            writeWithException(resume.getContacts().entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
-            writeWithException(resume.getSections().entrySet(), dos, x -> {
-                Map.Entry<SectionType, Section> entry = (Map.Entry<SectionType, Section>) x;
+            writeWithException(resume.getSections().entrySet(), dos, entry -> {
                 SectionType sectionType = entry.getKey();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) entry.getValue()).getText());
-                    case ACHIEVEMENT, QUALIFICATIONS -> writeWithException(((ListSection) entry.getValue()).getListText(), dos, s -> dos.writeUTF(s.toString()));
-                    case EXPERIENCE, EDUCATION -> writeWithException(((CompanySection) entry.getValue()).getCompanies(), dos, c -> {
-                        Company company = (Company) c;
+                    case ACHIEVEMENT, QUALIFICATIONS -> writeWithException(((ListSection) entry.getValue()).getListText(), dos, s -> dos.writeUTF(String.valueOf(s)));
+                    case EXPERIENCE, EDUCATION -> writeWithException(((CompanySection) entry.getValue()).getCompanies(), dos, company -> {
                         dos.writeUTF(company.getHomePage().getName());
                         dos.writeUTF(company.getHomePage().getWebsite());
-                        writeWithException(company.getPeriods(), dos, p -> {
-                            Period period = (Period) p;
+                        writeWithException(company.getPeriods(), dos, period -> {
                             dos.writeUTF(period.getStartDate().toString());
                             dos.writeUTF(period.getEndDate().toString());
                             dos.writeUTF(period.getTitle());
@@ -102,12 +98,12 @@ public class DataStreamSerializer implements SerializableStrategy {
         void write(T t) throws IOException;
     }
 
-    void writeWithException(Collection collection, DataOutputStream dos, FIWrite fiw) throws IOException {
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, FIWrite<T> fiw) throws IOException {
         Objects.requireNonNull(collection);
         int size = collection.size();
         dos.writeInt(size);
-        for (Object c : collection) {
-            fiw.write(c);
+        for (T t : collection) {
+            fiw.write(t);
         }
     }
 }
