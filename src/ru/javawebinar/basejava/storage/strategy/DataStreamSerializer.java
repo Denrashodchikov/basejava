@@ -15,45 +15,32 @@ public class DataStreamSerializer implements SerializableStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeWithException(resume.getContacts().entrySet(), dos, x -> {
+                Map.Entry<ContactType, String> entry = (Map.Entry<ContactType, String>) x;
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
-            //TODO implements sections
-            Map<SectionType, Section> sections = resume.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            });
+            writeWithException(resume.getSections().entrySet(), dos, x -> {
+                Map.Entry<SectionType, Section> entry = (Map.Entry<SectionType, Section>) x;
                 SectionType sectionType = entry.getKey();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
                     case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) entry.getValue()).getText());
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        ListSection listSection = (ListSection) entry.getValue();
-                        dos.writeInt(listSection.getListText().size());
-                        for (String s : listSection.getListText()) {
-                            dos.writeUTF(s);
-                        }
-                    }
-                    case EXPERIENCE, EDUCATION -> {
-                        CompanySection companySection = (CompanySection) entry.getValue();
-                        dos.writeInt(companySection.getCompanies().size());
-                        for (Company company : companySection.getCompanies()) {
-                            dos.writeUTF(company.getHomePage().getName());
-                            dos.writeUTF(company.getHomePage().getWebsite());
-                            List<Period> periodList = company.getPeriods();
-                            dos.writeInt(periodList.size());
-                            for (Period period : periodList) {
-                                dos.writeUTF(period.getStartDate().toString());
-                                dos.writeUTF(period.getEndDate().toString());
-                                dos.writeUTF(period.getTitle());
-                                dos.writeUTF(period.getDescription());
-                            }
-                        }
-                    }
+                    case ACHIEVEMENT, QUALIFICATIONS -> writeWithException(((ListSection) entry.getValue()).getListText(), dos, s -> dos.writeUTF(s.toString()));
+                    case EXPERIENCE, EDUCATION -> writeWithException(((CompanySection) entry.getValue()).getCompanies(), dos, c -> {
+                        Company company = (Company) c;
+                        dos.writeUTF(company.getHomePage().getName());
+                        dos.writeUTF(company.getHomePage().getWebsite());
+                        writeWithException(company.getPeriods(), dos, p -> {
+                            Period period = (Period) p;
+                            dos.writeUTF(period.getStartDate().toString());
+                            dos.writeUTF(period.getEndDate().toString());
+                            dos.writeUTF(period.getTitle());
+                            dos.writeUTF(period.getDescription());
+                        });
+                    });
                 }
-            }
+            });
         }
     }
 
@@ -110,5 +97,17 @@ public class DataStreamSerializer implements SerializableStrategy {
         return DateUtil.of(Integer.parseInt(arrDt[0]), Month.of(Integer.parseInt(arrDt[1])));
     }
 
+    @FunctionalInterface
+    public interface FIWrite<T> {
+        void write(T t) throws IOException;
+    }
 
+    void writeWithException(Collection collection, DataOutputStream dos, FIWrite fiw) throws IOException {
+        Objects.requireNonNull(collection);
+        int size = collection.size();
+        dos.writeInt(size);
+        for (Object c : collection) {
+            fiw.write(c);
+        }
+    }
 }
