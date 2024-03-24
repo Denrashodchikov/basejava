@@ -28,11 +28,14 @@ public class DataStreamSerializer implements SerializableStrategy {
                     case EXPERIENCE, EDUCATION -> writeWithException(((CompanySection) entry.getValue()).getCompanies(), dos, company -> {
                         dos.writeUTF(company.getHomePage().getName());
                         dos.writeUTF(company.getHomePage().getWebsite());
-                        writeWithException(company.getPeriods(), dos, period -> {
-                            dos.writeUTF(period.getStartDate().toString());
-                            dos.writeUTF(period.getEndDate().toString());
-                            dos.writeUTF(period.getTitle());
-                            dos.writeUTF(period.getDescription());
+                        writeWithException(company.getPeriods(), dos, new FIWrite<Period>() {
+                            @Override
+                            public void write(Period period) throws IOException {
+                                dos.writeUTF(period.getStartDate().toString());
+                                dos.writeUTF(period.getEndDate().toString());
+                                dos.writeUTF(period.getTitle());
+                                dos.writeUTF(period.getDescription());
+                            }
                         });
                     });
                 }
