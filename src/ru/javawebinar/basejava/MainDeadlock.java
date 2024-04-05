@@ -9,22 +9,18 @@ public class MainDeadlock implements Runnable {
 
     public void doFirst() {
         synchronized (resource1) {
-            System.out.println(Thread.currentThread().getName()
-                    + " take resource1");
+            printText("take resource1");
             synchronized (resource2) {
-                System.out.println(Thread.currentThread().getName()
-                        + " take resource2");
+                printText("take resource2");
             }
         }
     }
 
     public void doSecond() {
         synchronized (resource2) {
-            System.out.println(Thread.currentThread().getName()
-                    + " take resource2");
+            printText("take resource2");
             synchronized (resource1) {
-                System.out.println(Thread.currentThread().getName()
-                        + " take resource1");
+                printText("take resource1");
             }
         }
     }
@@ -40,5 +36,9 @@ public class MainDeadlock implements Runnable {
         Thread thread2 = new Thread(mainDeadlock, "Thread2");
         thread1.start();
         thread2.start();
+    }
+
+    private void printText(String text) {
+        System.out.println(Thread.currentThread().getName() + " " + text);
     }
 }
