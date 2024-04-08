@@ -1,24 +1,33 @@
 package ru.javawebinar.basejava;
 
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
     private volatile int counter;
-    private static final Object LOCK = new Object();
+    //  private static final Object LOCK = new Object();
+    private static final Lock lock = new ReentrantLock();
+    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat();
+        }
+    };
 
-    public static void main(String[] args) throws InterruptedException {
+
+    public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException {
         System.out.println(Thread.currentThread().getName());
 
         Thread thread0 = new Thread() {
             @Override
             public void run() {
                 System.out.println(getName() + ", " + getState());
- //               throw new IllegalStateException();
+                //               throw new IllegalStateException();
             }
         };
         thread0.start();
@@ -48,11 +57,13 @@ public class MainConcurrency {
 //        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
 
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            executorService.submit(() -> {
+            Future<Integer> future = executorService.submit(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
+                    System.out.println(threadLocal.get().format(new Date()));
                 }
                 latch.countDown();
+                return 5;
             });
         }
 //        for (int i = 0; i < THREADS_NUMBER; i++) {
@@ -103,10 +114,15 @@ public class MainConcurrency {
         }).start();
     }
 
-    private synchronized void inc() {
+    private void inc() {
 //        synchronized (this) {
 //        synchronized (MainConcurrency.class) {
-        counter++;
+        lock.lock();
+        try {
+            counter++;
+        } finally {
+            lock.unlock();
+        }
 //                wait();
 //                readFile
 //                ...
