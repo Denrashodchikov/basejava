@@ -7,12 +7,12 @@ import java.util.List;
 public class MainStream {
 
     public static int minValue(int[] values) {
-        return Arrays.stream(values).boxed().toList().stream().sorted().distinct().reduce(0, (a, b) -> 10 * a + b);
+        return Arrays.stream(values).sorted().distinct().reduce(0, (a, b) -> 10 * a + b);
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
-        return integers.stream().filter(n -> integers.stream().reduce(0, Integer::sum) % 2 != 0 || n % 2 == 0)
-                .filter(n -> integers.stream().reduce(0, Integer::sum) % 2 == 0 || n % 2 != 0).toList();
+        int sum = integers.stream().mapToInt(i -> i).sum();
+        return integers.stream().filter(n -> n % 2 != sum % 2).toList();
     }
 
     public static void main(String[] args) {
@@ -27,9 +27,7 @@ public class MainStream {
         ints.add(3);
         ints.add(4);
         ints.add(5);
-        List<Integer> res = oddOrEven(ints);
-        for (Integer i : res) {
-            System.out.println(i);
-        }
+        //ints.add(1);
+        oddOrEven(ints).forEach(System.out::println);
     }
 }
