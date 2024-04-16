@@ -1,18 +1,11 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.util.DateUtil;
-
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-
-import static ru.javawebinar.basejava.model.SectionType.*;
+import ru.javawebinar.basejava.model.Resume;
 
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName){
         Resume resume = new Resume(uuid,fullName);
-
+/*
         resume.setContacts(ContactType.PHONE, "8800553535");
         resume.setContacts(ContactType.SKYPE, "grigoriy");
         resume.setContacts(ContactType.EMAIL, "kislin@gmail.com");
@@ -113,7 +106,7 @@ public class ResumeTestData {
         resume.setSections(QUALIFICATIONS,listSection_2);
         resume.setSections(EXPERIENCE,experienceSection);
         resume.setSections(EDUCATION,educationSection);
-
+*/
         return resume;
     }
 }
