@@ -56,9 +56,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getNotExist() {
-        Assertions.assertThrows(NotExistStorageException.class, () -> {
-            assertGet(createResume(DUMMY,DUMMY));
-        });
+        Assertions.assertThrows(NotExistStorageException.class, () -> assertGet(createResume(DUMMY,DUMMY)));
     }
 
     @Test
@@ -66,7 +64,7 @@ public abstract class AbstractStorageTest {
         assertSize(INITIAL_SIZE);
     }
 
-    //@Test
+    @Test
     public void clear() {
         storage.clear();
         assertSize(0);
@@ -83,9 +81,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateNotExist() {
-        Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.update(createResume(UUID_4,FULLNAME_4));
-        });
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.update(createResume(UUID_4,FULLNAME_4)));
     }
 
     @Test
@@ -104,9 +100,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void saveExistStorage() {
-        Assertions.assertThrows(ExistStorageException.class, () -> {
-            storage.save(createResume(UUID_2,FULLNAME_2));
-        });
+        Assertions.assertThrows(ExistStorageException.class, () -> storage.save(createResume(UUID_2,FULLNAME_2)));
     }
 
     @Test
@@ -120,9 +114,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void deleteNotExist() {
-        Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.delete(UUID_4);
-        });
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_4));
     }
 
     private void assertSize(int size) {
