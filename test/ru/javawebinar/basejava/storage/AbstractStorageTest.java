@@ -21,11 +21,11 @@ public abstract class AbstractStorageTest {
 
     protected final Storage storage;
     private static final String DUMMY = "dummy";
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
-    private static final String UUID_5 = "uuid5";
+    private static final String UUID_1 = "uuid11111111111111111111111111111111";
+    private static final String UUID_2 = "uuid22222222222222222222222222222222";
+    private static final String UUID_3 = "uuid33333333333333333333333333333333";
+    private static final String UUID_4 = "uuid44444444444444444444444444444444";
+    private static final String UUID_5 = "uuid55555555555555555555555555555555";
     private static final String FULLNAME_1 = "uuid1_full";
     private static final String FULLNAME_2 = "uuid2_full";
     private static final String FULLNAME_3 = "uuid3_full";
