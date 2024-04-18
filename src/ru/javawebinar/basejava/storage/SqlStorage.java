@@ -69,7 +69,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT uuid,full_name FROM resume ORDER BY uuid;", ps -> {
+        return sqlHelper.execute("SELECT uuid,full_name FROM resume ORDER BY full_name;", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> list = new ArrayList<>();
             while (rs.next()) {
@@ -84,7 +84,7 @@ public class SqlStorage implements Storage {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
-                throw new NotExistStorageException("");
+                return 0;
             }
             return Integer.parseInt(rs.getString(1));
         });
