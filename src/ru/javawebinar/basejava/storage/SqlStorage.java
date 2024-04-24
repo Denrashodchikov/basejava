@@ -20,7 +20,6 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         sqlHelper.execute("DELETE FROM resume;");
-        sqlHelper.execute("DELETE FROM contact;");
     }
 
     @Override
@@ -36,7 +35,7 @@ public class SqlStorage implements Storage {
             }
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             do {
-                resume.setContacts(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                setContacts(resume, rs);
             } while (rs.next());
 
             return resume;
@@ -52,6 +51,10 @@ public class SqlStorage implements Storage {
                 if (ps.executeUpdate() == 0) {
                     throw new NotExistStorageException(resume.getUuid());
                 }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?;")) {
+                ps.setString(1, resume.getUuid());
+                ps.execute();
             }
             insertContacts(conn, resume);
             return null;
@@ -81,29 +84,25 @@ public class SqlStorage implements Storage {
             }
             return null;
         });
-        sqlHelper.execute("DELETE FROM contact c WHERE c.resume_uuid =?", ps -> {
-            ps.setString(1, uuid);
-            ps.executeQuery();
-            return null;
-        });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        Map<String, Resume> mapResumes = sqlHelper.execute("SELECT uuid,full_name FROM resume ORDER BY full_name,uuid;", ps -> {
-            ResultSet rs = ps.executeQuery();
+        return sqlHelper.transactionalExecute(conn -> {
             Map<String, Resume> map = new LinkedHashMap<>();
-            while (rs.next()) {
-                map.put(rs.getString("uuid"), new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            try (PreparedStatement ps = conn.prepareStatement("SELECT uuid,full_name FROM resume ORDER BY full_name,uuid;")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    map.put(rs.getString("uuid"), new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                }
             }
-            return map;
-        });
-        return sqlHelper.execute("SELECT resume_uuid, type, value FROM contact;", ps -> {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                mapResumes.get(rs.getString("resume_uuid")).setContacts(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+            try (PreparedStatement ps = conn.prepareStatement("SELECT resume_uuid, type, value FROM contact;")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    setContacts(map.get(rs.getString("resume_uuid")), rs);
+                }
             }
-            return mapResumes.values().stream().toList();
+            return map.values().stream().toList();
         });
     }
 
@@ -119,15 +118,19 @@ public class SqlStorage implements Storage {
     }
 
     private void insertContacts(Connection conn, Resume resume) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?) ON CONFLICT (resume_uuid, type) DO UPDATE SET value = ?;")) {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?);")) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, e.getKey().name());
                 ps.setString(3, e.getValue());
-                ps.setString(4, e.getValue());
                 ps.addBatch();
             }
             ps.executeBatch();
         }
     }
+
+    private void setContacts(Resume resume, ResultSet rs) throws SQLException {
+        resume.setContacts(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+    }
+
 }
