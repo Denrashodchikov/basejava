@@ -25,9 +25,9 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         return sqlHelper.execute("SELECT * FROM resume r" +
-                "  JOIN contact c " +
-                "    ON r.uuid = c.resume_uuid\n" +
-                " WHERE r.uuid =?", ps -> {
+                " LEFT JOIN contact c " +
+                "        ON r.uuid = c.resume_uuid\n" +
+                "     WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -90,13 +90,13 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(conn -> {
             Map<String, Resume> map = new LinkedHashMap<>();
-            try (PreparedStatement ps = conn.prepareStatement("SELECT uuid,full_name FROM resume ORDER BY full_name,uuid;")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name,uuid;")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     map.put(rs.getString("uuid"), new Resume(rs.getString("uuid"), rs.getString("full_name")));
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement("SELECT resume_uuid, type, value FROM contact;")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact;")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     setContacts(map.get(rs.getString("resume_uuid")), rs);
@@ -110,10 +110,7 @@ public class SqlStorage implements Storage {
     public int size() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                return 0;
-            }
-            return Integer.parseInt(rs.getString(1));
+            return !rs.next() ? 0 : Integer.parseInt(rs.getString(1));
         });
     }
 
