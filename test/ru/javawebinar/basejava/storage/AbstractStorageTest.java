@@ -123,6 +123,6 @@ public abstract class AbstractStorageTest {
     }
 
     private void assertGet(Resume resume) {
-        Assertions.assertEquals(storage.get(resume.getUuid()), resume);
+        Assertions.assertEquals(resume,storage.get(resume.getUuid()));
     }
 }

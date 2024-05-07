@@ -1,11 +1,11 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,9 @@ public class SqlStorage implements Storage {
     public Resume get(String uuid) {
         return sqlHelper.execute("SELECT * FROM resume r" +
                 " LEFT JOIN contact c " +
-                "        ON r.uuid = c.resume_uuid\n" +
+                "        ON r.uuid = c.resume_uuid" +
+                " LEFT JOIN section s " +
+                "        ON r.uuid = s.resume_uuid" +
                 "     WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
@@ -36,6 +38,7 @@ public class SqlStorage implements Storage {
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             do {
                 setContacts(resume, rs);
+                setSections(resume, rs);
             } while (rs.next());
 
             return resume;
@@ -52,11 +55,10 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?;")) {
-                ps.setString(1, resume.getUuid());
-                ps.execute();
-            }
+            deleteFrom(conn, resume, "contact");
+            deleteFrom(conn, resume, "section");
             insertContacts(conn, resume);
+            insertSection(conn, resume);
             return null;
         });
     }
@@ -70,6 +72,7 @@ public class SqlStorage implements Storage {
                 ps.execute();
             }
             insertContacts(conn, resume);
+            insertSection(conn, resume);
             return null;
         });
     }
@@ -102,6 +105,12 @@ public class SqlStorage implements Storage {
                     setContacts(map.get(rs.getString("resume_uuid")), rs);
                 }
             }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section;")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    setSections(map.get(rs.getString("resume_uuid")), rs);
+                }
+            }
             return map.values().stream().toList();
         });
     }
@@ -128,6 +137,36 @@ public class SqlStorage implements Storage {
 
     private void setContacts(Resume resume, ResultSet rs) throws SQLException {
         resume.setContacts(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+    }
+
+    private void insertSection(Connection conn, Resume resume) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type_sec, text) VALUES (?,?,?);")) {
+            for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue().toString());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    private void deleteFrom(Connection conn, Resume resume, String table) throws SQLException {
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE resume_uuid = ?;")) {
+                ps.setString(1, resume.getUuid());
+                ps.execute();
+            }
+    }
+
+    private void setSections(Resume resume, ResultSet rs) throws SQLException {
+        String text = rs.getString("text");
+        if (text != null) {
+            SectionType sectionType = SectionType.valueOf(rs.getString("type_sec"));
+            switch (sectionType) {
+                case PERSONAL,OBJECTIVE -> resume.setSections(sectionType, new TextSection(text));
+                case ACHIEVEMENT,QUALIFICATIONS -> resume.setSections(sectionType, new ListSection(Arrays.stream(text.split("/n")).toList()));
+            }
+        }
     }
 
 }

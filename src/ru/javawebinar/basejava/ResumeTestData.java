@@ -1,7 +1,14 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.ListSection;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.TextSection;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static ru.javawebinar.basejava.model.SectionType.*;
 
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName){
@@ -10,7 +17,7 @@ public class ResumeTestData {
         resume.setContacts(ContactType.PHONE, "8800553535");
         resume.setContacts(ContactType.SKYPE, "grigoriy");
         resume.setContacts(ContactType.EMAIL, "kislin@gmail.com");
-/*
+
         //TextSection
         TextSection textSection_1 = new TextSection();
         textSection_1.setText("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
@@ -46,7 +53,7 @@ public class ResumeTestData {
         list_2.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         list_2.add("Родной русский, английский \"upper intermediate\"");
         listSection_2.setListText(list_2);
-
+/*
         //CompanySection
         CompanySection experienceSection = new CompanySection();
         List<Company> companyList = new ArrayList<>();
@@ -108,6 +115,10 @@ public class ResumeTestData {
         resume.setSections(EXPERIENCE,experienceSection);
         resume.setSections(EDUCATION,educationSection);
 */
+        resume.setSections(OBJECTIVE,textSection_1);
+        resume.setSections(PERSONAL,textSection_2);
+        resume.setSections(ACHIEVEMENT,listSection_1);
+        resume.setSections(QUALIFICATIONS,listSection_2);
         return resume;
     }
 }

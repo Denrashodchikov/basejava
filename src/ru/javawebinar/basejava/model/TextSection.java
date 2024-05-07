@@ -1,8 +1,10 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serial;
 import java.util.Objects;
 
 public class TextSection extends Section {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String text;
@@ -40,8 +42,6 @@ public class TextSection extends Section {
 
     @Override
     public String toString() {
-        return "\nTextSection{" +
-                "text='" + text + '\'' +
-                "}\n";
+        return text;
     }
 }
