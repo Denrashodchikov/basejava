@@ -14,6 +14,11 @@ public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -145,15 +150,17 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, e.getKey().name());
                 switch (SectionType.valueOf(e.getKey().name())) {
-                    case PERSONAL,OBJECTIVE -> ps.setString(3, e.getValue().toString());
-                    case ACHIEVEMENT,QUALIFICATIONS -> {StringBuilder str = new StringBuilder();
+                    case PERSONAL, OBJECTIVE -> ps.setString(3, e.getValue().toString());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        StringBuilder str = new StringBuilder();
                         ListSection listSection = (ListSection) e.getValue();
                         for (String s : listSection.getListText()) {
                             str.append(s);
                             str.append("\n");
                         }
-                        str.deleteCharAt(str.length()-1);
-                        ps.setString(3, str.toString());}
+                        str.deleteCharAt(str.length() - 1);
+                        ps.setString(3, str.toString());
+                    }
                 }
                 ps.addBatch();
             }
@@ -162,10 +169,10 @@ public class SqlStorage implements Storage {
     }
 
     private void deleteFrom(Connection conn, Resume resume, String table) throws SQLException {
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE resume_uuid = ?;")) {
-                ps.setString(1, resume.getUuid());
-                ps.execute();
-            }
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE resume_uuid = ?;")) {
+            ps.setString(1, resume.getUuid());
+            ps.execute();
+        }
     }
 
     private void setSections(Resume resume, ResultSet rs) throws SQLException {
@@ -173,8 +180,8 @@ public class SqlStorage implements Storage {
         if (text != null) {
             SectionType sectionType = SectionType.valueOf(rs.getString("type_sec"));
             switch (sectionType) {
-                case PERSONAL,OBJECTIVE -> resume.setSections(sectionType, new TextSection(text));
-                case ACHIEVEMENT,QUALIFICATIONS -> resume.setSections(sectionType, new ListSection(Arrays.stream(text.split("/n")).toList()));
+                case PERSONAL, OBJECTIVE -> resume.setSections(sectionType, new TextSection(text));
+                case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(sectionType, new ListSection(Arrays.stream(text.split("/n")).toList()));
             }
         }
     }
