@@ -5,10 +5,7 @@ import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -176,7 +173,7 @@ public class SqlStorage implements Storage {
             SectionType sectionType = SectionType.valueOf(rs.getString("type_sec"));
             switch (sectionType) {
                 case PERSONAL, OBJECTIVE -> resume.setSections(sectionType, new TextSection(text));
-                case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(sectionType, new ListSection(Arrays.stream(text.split("/n")).toList()));
+                case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(sectionType, new ListSection(Arrays.stream(text.split("\\r?\\n")).toList()));
             }
         }
     }

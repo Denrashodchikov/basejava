@@ -43,11 +43,11 @@ public class ResumeTestData {
         list_2.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB");
         list_2.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy");
         list_2.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts");
-        list_2.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).\n");
+        list_2.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).");
         list_2.add("Python: Django.");
         list_2.add("JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js");
         list_2.add("Scala: SBT, Play2, Specs2, Anorm, Spray, Akka");
-        list_2.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT.\n");
+        list_2.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT.");
         list_2.add("Инструменты: Maven + plugin development, Gradle, настройка Ngnix");
         list_2.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer");
         list_2.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
@@ -118,7 +118,7 @@ public class ResumeTestData {
         resume.setSections(OBJECTIVE,textSection_1);
         resume.setSections(PERSONAL,textSection_2);
         resume.setSections(ACHIEVEMENT,listSection_1);
-        //resume.setSections(QUALIFICATIONS,listSection_2);
+        resume.setSections(QUALIFICATIONS,listSection_2);
         return resume;
     }
 }
