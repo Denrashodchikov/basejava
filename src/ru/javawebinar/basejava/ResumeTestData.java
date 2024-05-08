@@ -118,7 +118,7 @@ public class ResumeTestData {
         resume.setSections(OBJECTIVE,textSection_1);
         resume.setSections(PERSONAL,textSection_2);
         resume.setSections(ACHIEVEMENT,listSection_1);
-        resume.setSections(QUALIFICATIONS,listSection_2);
+        //resume.setSections(QUALIFICATIONS,listSection_2);
         return resume;
     }
 }
