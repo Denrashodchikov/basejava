@@ -44,13 +44,6 @@ public class ListSection extends Section {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        for (String s : listText) {
-            str.append(s);
-            str.append("\n");
-        }
-        str.deleteCharAt(str.length()-1);
-        return str.toString();
-        //return listText.toString().replace("[", "").replace("]", "");
+        return String.join("\n", listText);
     }
 }

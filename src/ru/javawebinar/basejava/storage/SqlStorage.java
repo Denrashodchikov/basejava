@@ -152,14 +152,9 @@ public class SqlStorage implements Storage {
                 switch (SectionType.valueOf(e.getKey().name())) {
                     case PERSONAL, OBJECTIVE -> ps.setString(3, e.getValue().toString());
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        StringBuilder str = new StringBuilder();
                         ListSection listSection = (ListSection) e.getValue();
-                        for (String s : listSection.getListText()) {
-                            str.append(s);
-                            str.append("\n");
-                        }
-                        str.deleteCharAt(str.length() - 1);
-                        ps.setString(3, str.toString());
+                        String res = String.join("\n", listSection.getListText());
+                        ps.setString(3, res);
                     }
                 }
                 ps.addBatch();
