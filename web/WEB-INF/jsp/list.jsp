@@ -5,12 +5,13 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="web/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Список всех резюме</title>
 </head>
 <body>
+<jsp:include page="fragments/header.jsp"/>
 <section>
-    <table>
+    <table border="1" cellpadding="8" cellspacing="0">
         <tr>
             <th>Full name</th>
             <th>Email</th>
@@ -29,5 +30,6 @@
         %>
     </table>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
