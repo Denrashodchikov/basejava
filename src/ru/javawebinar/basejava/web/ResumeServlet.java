@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,14 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
+
+    private Storage storage;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        storage = Config.get().getStorage();
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
         request.setCharacterEncoding("UTF-8");
@@ -21,7 +30,6 @@ public class ResumeServlet extends HttpServlet {
         //String name = request.getParameter("name");
         //response.getWriter().write(name == null ? "Hello resumes!" : "Hello " + name + "!");
 
-        Storage storage = Config.get().getStorage();
         List<Resume> listResumes = storage.getAllSorted();
         PrintWriter out = response.getWriter();
         out.print("""
