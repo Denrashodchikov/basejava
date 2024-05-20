@@ -14,7 +14,7 @@
 <section>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
-            <th>Full name</th>
+            <th>Имя</th>
             <th>Email</th>
             <th></th>
             <th></th>
@@ -29,6 +29,10 @@
             </tr>
         </c:forEach>
     </table>
+    <hr>
+
+    <a href="resume?action=create"><button type="submit">Добавить резюме</button></a>
+
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
