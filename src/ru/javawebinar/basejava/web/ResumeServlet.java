@@ -54,7 +54,8 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume r;
-        if (isNotEmpty(uuid)) {
+        boolean existResume = isNotEmpty(uuid);
+        if (existResume) {
             r = storage.get(uuid);
         } else {
             r = new Resume();
@@ -71,6 +72,7 @@ public class ResumeServlet extends HttpServlet {
             }
             for (SectionType type : SectionType.values()) {
                 String value = request.getParameter(type.getTitle());
+                //String[] values = request.getParameterValues(type.getTitle());
                 switch (type) {
                     case PERSONAL, OBJECTIVE -> {
                         if (isNotEmpty(value)) {
@@ -81,19 +83,19 @@ public class ResumeServlet extends HttpServlet {
                     }
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         if (isNotEmpty(value)) {
-                            r.setSections(type, new ListSection(Arrays.stream(value.split("\\n")).toList()));
+                            r.setSections(type, new ListSection(Arrays.stream(value.split("\\n")).map(s -> s.replaceAll("([\\r\\n])", "")).filter(s -> !s.equals("")).toList()));
                         } else {
                             r.getSections().remove(type);
                         }
                     }
                 }
             }
-            if (isNotEmpty(uuid)) {
+            if (existResume) {
                 storage.update(r);
             } else {
                 storage.save(r);
             }
-        } else {
+        } else if (existResume) {
             storage.delete(uuid);
         }
         response.sendRedirect("resume");
