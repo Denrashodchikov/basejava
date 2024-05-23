@@ -1,10 +1,9 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.ListSection;
-import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.TextSection;
+import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,13 +52,13 @@ public class ResumeTestData {
         list_2.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         list_2.add("Родной русский, английский \"upper intermediate\"");
         listSection_2.setListText(list_2);
-/*
+
         //CompanySection
         CompanySection experienceSection = new CompanySection();
         List<Company> companyList = new ArrayList<>();
         Company company_1 = new Company();
         Period period_1 = new Period();
-        period_1.setStartDate(DateUtil.of(2013,Month.OCTOBER));
+        period_1.setStartDate(DateUtil.of(2013, Month.OCTOBER));
         period_1.setEndDate(DateUtil.NOW);
         period_1.setTitle("Автор проекта.");
         period_1.setDescription("Создание, организация и проведение Java онлайн проектов и стажировок.");
@@ -114,7 +113,7 @@ public class ResumeTestData {
         resume.setSections(QUALIFICATIONS,listSection_2);
         resume.setSections(EXPERIENCE,experienceSection);
         resume.setSections(EDUCATION,educationSection);
-*/
+
         resume.setSections(OBJECTIVE,textSection_1);
         resume.setSections(PERSONAL,textSection_2);
         resume.setSections(ACHIEVEMENT,listSection_1);

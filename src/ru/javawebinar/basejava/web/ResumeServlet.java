@@ -49,7 +49,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
@@ -72,7 +72,7 @@ public class ResumeServlet extends HttpServlet {
             }
             for (SectionType type : SectionType.values()) {
                 String value = request.getParameter(type.getTitle());
-                //String[] values = request.getParameterValues(type.getTitle());
+                String[] values = request.getParameterValues(type.getTitle());
                 switch (type) {
                     case PERSONAL, OBJECTIVE -> {
                         if (isNotEmpty(value)) {
@@ -87,6 +87,9 @@ public class ResumeServlet extends HttpServlet {
                         } else {
                             r.getSections().remove(type);
                         }
+                    }
+                    case EDUCATION, EXPERIENCE -> {
+                      //
                     }
                 }
             }

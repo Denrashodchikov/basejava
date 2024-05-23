@@ -1,5 +1,8 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.model.Company" %>
+<%@ page import="ru.javawebinar.basejava.model.Section" %>
+<%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -25,13 +28,56 @@
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
             </dl>
         </c:forEach>
-        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
-            <jsp:useBean id="sectionType"
-                         type="ru.javawebinar.basejava.model.SectionType"/>
-            <h2><%=sectionType.getTitle()%></h2>
-            <textarea name="<%=sectionType.getTitle()%>" rows="4" cols="100">${resume.getSection(sectionType)}</textarea>
-        </c:forEach>
 
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <c:set var="sectionData" value="${resume.getSection(sectionType)}"/>
+            <jsp:useBean id="sectionData" type="ru.javawebinar.basejava.model.Section"/>
+            <h2><a>${sectionType.title}</a></h2>
+            <c:choose>
+                <c:when test="${sectionType=='OBJECTIVE' || sectionType=='PERSONAL' || sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
+                    <textarea name="${sectionType.title}" rows="4"
+                              cols="100">${resume.getSection(sectionType)}</textarea>
+                </c:when>
+                <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
+                        <c:forEach var="company" items="<%=((CompanySection) sectionData).getCompanies()%>" varStatus="company_index">
+                            <dl>
+                                <dt>Название компании:</dt>
+                                <dd><input type="text" name="${sectionType.title}" size=30 value="${company.homePage.name}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Сайт компании:</dt>
+                                <dd><input type="text" name="${sectionType.title}${company_index.index}website" size=30 value="${company.homePage.website}"></dd>
+                            </dl>
+                            <c:forEach var="period" items="${company.periods}" varStatus="period_index">
+                                <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
+                                <dl>
+                                    <dt>Начальная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${sectionType.title}${company_index.index}startDate${period_index.index}" size=10
+                                               value="<%=period.getStartDate()%>" placeholder="MM/yyyy">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>Конечная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${sectionType.title}${company_index.index}endDate${period_index.index}" size=10
+                                               value="<%=period.getEndDate()%>" placeholder="MM/yyyy">
+                                </dl>
+                                <dl>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name='${sectionType.title}${company_index.index}title${period_index.index}' size=75
+                                               value="${period.title}">
+                                </dl>
+                                <dl>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${sectionType.title}${company_index.count}description${period_index.index}" rows=5
+                                                  cols=75>${period.description}</textarea></dd>
+                                </dl>
+                            </c:forEach>
+                        </c:forEach>
+                </c:when>
+            </c:choose>
+        </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
         <button type="button" onclick="window.history.back()">Отменить</button>

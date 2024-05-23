@@ -1,5 +1,8 @@
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="static ru.javawebinar.basejava.model.SectionType.OBJECTIVE" %>
+<%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
+<%@ page import="ru.javawebinar.basejava.model.TextSection" %>
+<%@ page import="ru.javawebinar.basejava.model.ListSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -20,11 +23,48 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
-    <c:forEach var="sectionEntry" items="${resume.sections}">
-            <jsp:useBean id="sectionEntry"
-        type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType, ru.javawebinar.basejava.model.Section>"/>
-                <h3><%=sectionEntry.getKey().getTitle()%></h3>
-                <textarea readonly id="section" name="section" rows="4" cols="100">${resume.getSection(sectionEntry.getKey())}</textarea><br/>
+    <br>
+
+
+    <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+        <c:set var="sectionData" value="${resume.getSection(sectionType)}"/>
+        <jsp:useBean id="sectionData" type="ru.javawebinar.basejava.model.Section"/>
+        <h2><a>${sectionType.title}</a></h2>
+        <c:choose>
+            <c:when test="${sectionType=='OBJECTIVE' || sectionType=='PERSONAL'}">
+                    <%=((TextSection) sectionData).getText()%>
+            </c:when>
+            <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENT'}">
+                <c:forEach var="item" items="<%=((ListSection) sectionData).getListText()%>">
+                    <li>${item}</li>
+                </c:forEach>
+            </c:when>
+            <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
+                <c:if test="${sectionData!=null}">
+                    <c:forEach var="company" items="<%=((CompanySection) sectionData).getCompanies()%>">
+                        <h3>${company.homePage.name}</h3>
+                        <dl>
+                            <dt>Сайт компании:</dt><a>${company.homePage.website}</a>
+                        </dl>
+                        <c:forEach var="period" items="${company.periods}">
+                            <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
+                            <dl>
+                                <dt>Начальная дата:</dt><a><%=period.getStartDate()%></a>
+                            </dl>
+                            <dl>
+                                <dt>Конечная дата:</dt><a><%=period.getEndDate()%></a>
+                            </dl>
+                            <dl>
+                                <dt>Должность:</dt><a>${period.title}</a>
+                            </dl>
+                            <dl>
+                                <dt>Описание:</dt><a>${period.description}</a>
+                            </dl>
+                        </c:forEach>
+                    </c:forEach>
+                </c:if>
+            </c:when>
+        </c:choose>
     </c:forEach>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
