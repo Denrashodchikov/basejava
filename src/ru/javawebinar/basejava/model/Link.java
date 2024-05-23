@@ -1,9 +1,11 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Link implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public Link() {
@@ -33,6 +35,7 @@ public class Link implements Serializable {
     public void setWebsite(String website) {
         this.website = website;
     }
+
 
     @Override
     public boolean equals(Object o) {

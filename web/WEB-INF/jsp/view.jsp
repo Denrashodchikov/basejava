@@ -51,7 +51,7 @@
                     <c:forEach var="company" items="<%=((CompanySection) sectionData).getCompanies()%>">
                         <h3>${company.homePage.name}</h3>
                         <dl>
-                            <dt>Сайт компании:</dt><a>${company.homePage.website}</a>
+                            <dt>Сайт компании:</dt><a href=${company.homePage.website}>${company.homePage.website}</a>
                         </dl>
                         <c:forEach var="period" items="${company.periods}">
                             <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>

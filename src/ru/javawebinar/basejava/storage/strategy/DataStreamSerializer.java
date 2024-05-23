@@ -33,6 +33,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                             dos.writeUTF(period.getEndDate().toString());
                             dos.writeUTF(period.getTitle());
                             dos.writeUTF(period.getDescription() == null ? "" : period.getDescription());
+                            //dos.writeUTF(period.getDescription());
                         });
                     });
                 }
