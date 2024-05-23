@@ -90,20 +90,20 @@ public class ResumeTestData {
         List<Company> companyList2 = new ArrayList<>();
         Company edu_1 = new Company();
         edu_1.setHomePage(new Link("Заочная физико-техническая школа при МФТИ","https://mipt.ru/"));
-        edu_1.setPeriods(List.of(new Period(DateUtil.of(1984,Month.SEPTEMBER),DateUtil.of(1987,Month.JUNE),"Закончил с отличием","")));
+        edu_1.setPeriods(List.of(new Period(DateUtil.of(1984,Month.SEPTEMBER),DateUtil.of(1987,Month.JUNE),"Закончил с отличием",null)));
         companyList2.add(edu_1);
         Company edu_2 = new Company();
         edu_2.setHomePage(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики","http://www.ifmo.ru/"));
-        edu_2.setPeriods(List.of(new Period(DateUtil.of(1993,Month.SEPTEMBER),DateUtil.of(1996,Month.JULY),"Аспирантура (программист С, С++)",""),
-                new Period(DateUtil.of(1987,Month.SEPTEMBER),DateUtil.of(1993,Month.JULY),"Инженер (программист Fortran, C)","")));
+        edu_2.setPeriods(List.of(new Period(DateUtil.of(1993,Month.SEPTEMBER),DateUtil.of(1996,Month.JULY),"Аспирантура (программист С, С++)",null),
+                new Period(DateUtil.of(1987,Month.SEPTEMBER),DateUtil.of(1993,Month.JULY),"Инженер (программист Fortran, C)",null)));
         companyList2.add(edu_2);
         Company edu_3 = new Company();
         edu_3.setHomePage(new Link("Alcatel","http://www.alcatel.ru/"));
-        edu_3.setPeriods(List.of(new Period(DateUtil.of(1997,Month.SEPTEMBER),DateUtil.of(1998,Month.MARCH),"6 месяцев обучения цифровым телефонным сетям (Москва)","")));
+        edu_3.setPeriods(List.of(new Period(DateUtil.of(1997,Month.SEPTEMBER),DateUtil.of(1998,Month.MARCH),"6 месяцев обучения цифровым телефонным сетям (Москва)",null)));
         companyList2.add(edu_3);
         Company edu_4 = new Company();
         edu_4.setHomePage(new Link("Siemens AG","http://www.siemens.ru/"));
-        edu_4.setPeriods(List.of(new Period(DateUtil.of(2005,Month.JANUARY),DateUtil.of(2005,Month.APRIL),"3 месяца обучения мобильным IN сетям (Берлин)","")));
+        edu_4.setPeriods(List.of(new Period(DateUtil.of(2005,Month.JANUARY),DateUtil.of(2005,Month.APRIL),"3 месяца обучения мобильным IN сетям (Берлин)",null)));
         companyList2.add(edu_4);
         educationSection.setCompanies(companyList2);
 

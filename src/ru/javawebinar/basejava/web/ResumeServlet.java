@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static ru.javawebinar.basejava.model.SectionType.EDUCATION;
+import static ru.javawebinar.basejava.model.SectionType.EXPERIENCE;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -40,8 +44,8 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view"-> resume = fillResume(storage.get(uuid));
-            case "edit"-> resume = fillResume(storage.get(uuid));
+            case "view" -> resume = fillResumeView(storage.get(uuid));
+            case "edit" -> resume = fillResume(storage.get(uuid));
             case "create" -> resume = fillResume(null);
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
@@ -92,7 +96,26 @@ public class ResumeServlet extends HttpServlet {
                         }
                     }
                     case EDUCATION, EXPERIENCE -> {
-                        //
+                        List<Company> companyList = new ArrayList<>();
+                        for (int i = 0; i < values.length; i++) {
+                            if (isNotEmpty(values[i])) {
+                                String[] title = request.getParameterValues(type.getTitle() + i + "title");
+                                String[] startDate = request.getParameterValues(type.getTitle() + i + "startDate");
+                                String[] endDate = request.getParameterValues(type.getTitle() + i + "endDate");
+                                String[] description = request.getParameterValues(type.getTitle() + i + "description");
+                                List<Period> periodList = new ArrayList<>();
+                                for (int j = 0; j < title.length; j++) {
+                                    periodList.add(new Period(!startDate[j].equals("") ? DateUtil.of(startDate[j]) : null, !endDate[j].equals("") ? DateUtil.of(endDate[j]) : null, title[j], description == null ? "" : description.length > j ? description[j] : ""));
+                                }
+                                Company company = new Company(new Link(values[i], request.getParameter(type.getTitle() + i + "website")), periodList);
+                                company.setPeriods(periodList);
+                                companyList.add(company);
+                            }
+                        }
+                        CompanySection companySection = new CompanySection();
+                        companySection.setCompanies(companyList);
+                        r.getSections().remove(type);
+                        r.setSections(type, companySection);
                     }
                 }
             }
@@ -114,7 +137,7 @@ public class ResumeServlet extends HttpServlet {
     private Resume fillResume(Resume r) {
         Resume resume = r;
         if (resume == null) {
-            resume = new Resume("","");
+            resume = new Resume("", "");
         }
         for (ContactType c : ContactType.values()) {
             if (resume.getContact(c) == null) {
@@ -126,7 +149,35 @@ public class ResumeServlet extends HttpServlet {
                 switch (s) {
                     case PERSONAL, OBJECTIVE -> resume.setSections(s, new TextSection(""));
                     case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(s, new ListSection(new ArrayList<>(1)));
-                    case EDUCATION, EXPERIENCE -> resume.setSections(s, new CompanySection(List.of(new Company(new Link("", ""),List.of(new Period(null,null,"",""))))));
+                    case EDUCATION, EXPERIENCE -> resume.setSections(s, new CompanySection(List.of(new Company(new Link("", ""), List.of(new Period(null, null, "", ""))))));
+                }
+            } else if (s.equals(EDUCATION) || s.equals(EXPERIENCE)) {
+                //List<Company> list = new ArrayList<>();
+                CompanySection companySection = (CompanySection) resume.getSection(s);
+                //companySection.getCompanies()
+                companySection.getCompanies().add(new Company(new Link("", ""), List.of(new Period(null, null, "", ""))));
+                resume.setSections(s, new CompanySection(companySection.getCompanies()));
+            }
+        }
+        return resume;
+    }
+
+    private Resume fillResumeView(Resume r) {
+        Resume resume = r;
+        if (resume == null) {
+            resume = new Resume("", "");
+        }
+        for (ContactType c : ContactType.values()) {
+            if (resume.getContact(c) == null) {
+                resume.setContacts(c, "");
+            }
+        }
+        for (SectionType s : SectionType.values()) {
+            if (resume.getSection(s) == null) {
+                switch (s) {
+                    case PERSONAL, OBJECTIVE -> resume.setSections(s, new TextSection(""));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(s, new ListSection(new ArrayList<>(1)));
+                    case EDUCATION, EXPERIENCE -> resume.setSections(s, new CompanySection(List.of(new Company(new Link("", ""), List.of(new Period(null, null, "", ""))))));
                 }
             }
         }

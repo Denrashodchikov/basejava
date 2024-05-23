@@ -45,8 +45,8 @@
                 </c:forEach>
             </c:when>
             <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
-                <c:set var="companyExist" value="<%=((CompanySection) sectionData).getCompanies().get(0).getHomePage().getName()%>"/>
-                <c:if test="${companyExist != '' }">
+                <c:set var="companyCount" value="<%=((CompanySection) sectionData).getCompanies().size()%>"/>
+                <c:if test="${companyCount > 0 }">
                     <h2><a>${sectionType.title}</a></h2>
                     <c:forEach var="company" items="<%=((CompanySection) sectionData).getCompanies()%>">
                         <h3>${company.homePage.name}</h3>

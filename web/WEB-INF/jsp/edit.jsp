@@ -49,30 +49,29 @@
                                 <dt>Сайт компании:</dt>
                                 <dd><input type="text" name="${sectionType.title}${company_index.index}website" size=30 value="${company.homePage.website}"></dd>
                             </dl>
-                            <c:forEach var="period" items="${company.periods}" varStatus="period_index">
+                            <c:forEach var="period" items="${company.periods}">
                                 <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
                                 <dl>
                                     <dt>Начальная дата:</dt>
                                     <dd>
-                                        <input type="text" name="${sectionType.title}${company_index.index}startDate${period_index.index}" size=10
+                                        <input type="text" name="${sectionType.title}${company_index.index}startDate" size=10
                                                value="<%=DateUtil.convert(period.getStartDate())%>" placeholder="MM/yyyy">
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Конечная дата:</dt>
                                     <dd>
-                                        <input type="text" name="${sectionType.title}${company_index.index}endDate${period_index.index}" size=10
+                                        <input type="text" name="${sectionType.title}${company_index.index}endDate" size=10
                                                value="<%=DateUtil.convert(period.getEndDate())%>" placeholder="MM/yyyy">
                                 </dl>
                                 <dl>
                                     <dt>Должность:</dt>
-                                    <dd><input type="text" name='${sectionType.title}${company_index.index}title${period_index.index}' size=75
+                                    <dd><input type="text" name='${sectionType.title}${company_index.index}title' size=75
                                                value="${period.title}">
                                 </dl>
                                 <dl>
                                     <dt>Описание:</dt>
-                                    <dd><textarea name="${sectionType.title}${company_index.count}description${period_index.index}" rows=5
-                                                  cols=75>${period.description}</textarea></dd>
+                                    <dd><textarea name="${sectionType.title}${company_index.index}description" rows=5 cols=75>${period.description}</textarea></dd>
                                 </dl>
                             </c:forEach>
                         </c:forEach>
