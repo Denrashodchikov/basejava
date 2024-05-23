@@ -6,10 +6,14 @@ import java.util.Objects;
 public class CompanySection extends Section {
     private static final long serialVersionUID = 1L;
 
+    private List<Company> companies;
+
     public CompanySection() {
     }
 
-    private List<Company> companies;
+    public CompanySection(List<Company> companies) {
+        this.companies = companies;
+    }
 
     public List<Company> getCompanies() {
         return companies;

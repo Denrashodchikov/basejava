@@ -3,6 +3,7 @@
 <%@ page import="ru.javawebinar.basejava.model.Company" %>
 <%@ page import="ru.javawebinar.basejava.model.Section" %>
 <%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -54,14 +55,14 @@
                                     <dt>Начальная дата:</dt>
                                     <dd>
                                         <input type="text" name="${sectionType.title}${company_index.index}startDate${period_index.index}" size=10
-                                               value="<%=period.getStartDate()%>" placeholder="MM/yyyy">
+                                               value="<%=DateUtil.convert(period.getStartDate())%>" placeholder="MM/yyyy">
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Конечная дата:</dt>
                                     <dd>
                                         <input type="text" name="${sectionType.title}${company_index.index}endDate${period_index.index}" size=10
-                                               value="<%=period.getEndDate()%>" placeholder="MM/yyyy">
+                                               value="<%=DateUtil.convert(period.getEndDate())%>" placeholder="MM/yyyy">
                                 </dl>
                                 <dl>
                                     <dt>Должность:</dt>

@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -38,8 +40,9 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> resume = storage.get(uuid);
-            case "create" -> resume = new Resume("", "");
+            case "view"-> resume = fillResume(storage.get(uuid));
+            case "edit"-> resume = fillResume(storage.get(uuid));
+            case "create" -> resume = fillResume(null);
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
@@ -89,7 +92,7 @@ public class ResumeServlet extends HttpServlet {
                         }
                     }
                     case EDUCATION, EXPERIENCE -> {
-                      //
+                        //
                     }
                 }
             }
@@ -106,5 +109,27 @@ public class ResumeServlet extends HttpServlet {
 
     private static boolean isNotEmpty(String s) {
         return s != null && s.trim().length() != 0;
+    }
+
+    private Resume fillResume(Resume r) {
+        Resume resume = r;
+        if (resume == null) {
+            resume = new Resume("","");
+        }
+        for (ContactType c : ContactType.values()) {
+            if (resume.getContact(c) == null) {
+                resume.setContacts(c, "");
+            }
+        }
+        for (SectionType s : SectionType.values()) {
+            if (resume.getSection(s) == null) {
+                switch (s) {
+                    case PERSONAL, OBJECTIVE -> resume.setSections(s, new TextSection(""));
+                    case ACHIEVEMENT, QUALIFICATIONS -> resume.setSections(s, new ListSection(new ArrayList<>(1)));
+                    case EDUCATION, EXPERIENCE -> resume.setSections(s, new CompanySection(List.of(new Company(new Link("", ""),List.of(new Period(null,null,"",""))))));
+                }
+            }
+        }
+        return resume;
     }
 }
