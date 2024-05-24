@@ -42,7 +42,7 @@
                 <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                         <c:forEach var="company" items="<%=((CompanySection) sectionData).getCompanies()%>" varStatus="company_index">
                             <dl>
-                                <dt>Название компании:</dt>
+                                <dt><b>Название компании:</b></dt>
                                 <dd><input type="text" name="${sectionType.title}" size=30 value="${company.homePage.name}"></dd>
                             </dl>
                             <dl>

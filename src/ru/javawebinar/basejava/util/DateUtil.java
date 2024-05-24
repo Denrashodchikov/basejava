@@ -5,6 +5,8 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
+import static java.time.LocalDate.now;
+
 public class DateUtil {
     public static final LocalDate NOW = LocalDate.of(3000, 1, 1);
 
@@ -13,7 +15,7 @@ public class DateUtil {
     }
 
     public static String convert(LocalDate localDate){
-        return localDate==null ? "" : localDate.equals(NOW) ? "по настоящее время" : localDate.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+        return localDate==null ? "" : localDate.isAfter(now()) ? "по настоящее время" : localDate.format(DateTimeFormatter.ofPattern("MM/yyyy"));
     }
 
     public static LocalDate of(String str){

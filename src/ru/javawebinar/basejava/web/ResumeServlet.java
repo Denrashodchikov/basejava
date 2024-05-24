@@ -105,7 +105,9 @@ public class ResumeServlet extends HttpServlet {
                                 String[] description = request.getParameterValues(type.getTitle() + i + "description");
                                 List<Period> periodList = new ArrayList<>();
                                 for (int j = 0; j < title.length; j++) {
-                                    periodList.add(new Period(!startDate[j].equals("") ? DateUtil.of(startDate[j]) : null, !endDate[j].equals("") ? DateUtil.of(endDate[j]) : null, title[j], description == null ? "" : description.length > j ? description[j] : ""));
+                                    if (isNotEmpty(title[j])) {
+                                        periodList.add(new Period(!startDate[j].equals("") ? DateUtil.of(startDate[j]) : null, !endDate[j].equals("") ? DateUtil.of(endDate[j]) : null, title[j], description == null ? "" : description.length > j ? description[j] : ""));
+                                    }
                                 }
                                 Company company = new Company(new Link(values[i], request.getParameter(type.getTitle() + i + "website")), periodList);
                                 company.setPeriods(periodList);
@@ -152,9 +154,12 @@ public class ResumeServlet extends HttpServlet {
                     case EDUCATION, EXPERIENCE -> resume.setSections(s, new CompanySection(List.of(new Company(new Link("", ""), List.of(new Period(null, null, "", ""))))));
                 }
             } else if (s.equals(EDUCATION) || s.equals(EXPERIENCE)) {
-                //List<Company> list = new ArrayList<>();
                 CompanySection companySection = (CompanySection) resume.getSection(s);
-                //companySection.getCompanies()
+                for (Company company : companySection.getCompanies()) {
+                    List<Period> periodList = company.getPeriods();
+                    periodList.add(new Period(null, null, "", ""));
+                    company.setPeriods(periodList);
+                }
                 companySection.getCompanies().add(new Company(new Link("", ""), List.of(new Period(null, null, "", ""))));
                 resume.setSections(s, new CompanySection(companySection.getCompanies()));
             }
