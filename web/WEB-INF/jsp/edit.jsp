@@ -49,6 +49,7 @@
                                 <dt>Сайт компании:</dt>
                                 <dd><input type="text" name="${sectionType.title}${company_index.index}website" size=30 value="${company.homePage.website}"></dd>
                             </dl>
+                            <div style="margin-left: 30px"
                             <c:forEach var="period" items="${company.periods}">
                                 <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period"/>
                                 <dl>
@@ -74,6 +75,7 @@
                                     <dd><textarea name="${sectionType.title}${company_index.index}description" rows=5 cols=75>${period.description}</textarea></dd>
                                 </dl>
                             </c:forEach>
+                            </div>
                         </c:forEach>
                 </c:when>
             </c:choose>
